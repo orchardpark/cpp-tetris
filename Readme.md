@@ -4,7 +4,9 @@ C++ implementation of the Tetris game for evaluating reinforcement learning algo
 
 ## Installation
 
-Requires [CMake](https://cmake.org/) 3.16 or higher.
+Requirements:
+- [SDL2](https://wiki.libsdl.org/Installation)
+- [CMake](https://cmake.org/) 3.16 or higher.
 
 In order to build this game first create the build directory
 `mkdir build`. Change to build directory `cd build` then run 
