@@ -1,6 +1,6 @@
 #include "../include/model.h"
 
-void GamePiece::rotate() {
+void GamePiece::Rotate() {
     switch (orientation_) {
         case up:
             orientation_ = right;
@@ -36,7 +36,7 @@ std::vector<std::vector<Occupancy>> GamePiece::GetRepresentation() {
     }
 }
 
-GamePiece::GamePiece(Shape shape, Orientation orientation) : orientation_(orientation), shape_(shape), offset_(0) {
+GamePiece::GamePiece(Shape shape, Orientation orientation, int offsetX) : orientation_(orientation), shape_(shape), offsetX_(offsetX),offsetY_(0) {
 }
 
 std::vector<std::vector<Occupancy>> GamePiece::GetIRepresentation() {
@@ -220,10 +220,34 @@ std::vector<std::vector<Occupancy>> GamePiece::GetZRepresentation() {
     }
 }
 
+void GamePiece::MoveLeft() {
+    if(offsetX_ > 0) offsetX_--;
+}
+
+void GamePiece::MoveRight() {
+    if(offsetX_ < NumColumnsBoard-1) offsetX_++;
+}
+
+int GamePiece::GetOffsetY() {
+    return offsetY_;
+}
+
+int GamePiece::GetOffsetX() {
+    return offsetX_;
+}
+
+Shape GamePiece::GetShape() {
+    return shape_;
+}
+
+void GamePiece::MoveDown() {
+    offsetY_++;
+}
+
 GameBoard InitBoard(){
-    std::vector<std::vector<Shape>> v(19);
-    for(int i=0; i<19; i++)
-        v[i] = std::vector<Shape>(10); // initialize with NULL
+    std::vector<std::vector<Shape>> v(NumRowsBoard);
+    for(int i=0; i<NumRowsBoard; i++)
+        v[i] = std::vector<Shape>(NumColumnsBoard, (Shape)NULL);
     return v;
 }
 

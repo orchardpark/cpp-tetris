@@ -7,17 +7,25 @@
 
 #endif //CPP_TETRIS_GAMELOGIC_H
 #include "model.h"
+#include <random>
 
 class Game{
 public:
     Game();
-    void ExecuteTimeStep();
-    bool IsGameFinished();
+    /**
+     * Executes one time step (moving current piece down 1)
+     * @return true if succeeded and false if game is finished
+     */
+    bool ExecuteTimeStep();
+
 private:
+    bool IsGameFinished();
     GamePiece NextPiece();
-    bool IsPieceFinished();
-    void clearAndScore();
+    bool IsPieceBlocked();
+    void AddPieceToBoard();
+    void ClearAndScore();
     GameBoard board_;
     unsigned int score_;
     GamePiece currentPiece_;
+    int level_;
 };
