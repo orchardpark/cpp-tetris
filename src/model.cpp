@@ -2,36 +2,36 @@
 
 void GamePiece::Rotate() {
     switch (orientation_) {
-        case up:
-            orientation_ = right;
+        case Orientation::up:
+            orientation_ = Orientation::right;
             break;
-        case right:
-            orientation_ = down;
+        case Orientation::right:
+            orientation_ = Orientation::down;
             break;
-        case down:
-            orientation_ = left;
+        case Orientation::down:
+            orientation_ = Orientation::left;
             break;
-        case left:
-            orientation_ = up;
+        case Orientation::left:
+            orientation_ = Orientation::up;
             break;
     }
 }
 
 std::vector<std::vector<Occupancy>> GamePiece::GetRepresentation() {
     switch (shape_) {
-        case i_block:
+    case Shape::i_block:
             return GetIRepresentation();
-        case j_block:
+        case Shape::j_block:
             return GetJRepresentation();
-        case l_block:
+        case Shape::l_block:
             return GetLRepresentation();
-        case o_block:
+        case Shape::o_block:
             return GetORepresentation();
-        case s_block:
+        case Shape::s_block:
             return GetSRepresentation();
-        case t_block:
+        case Shape::t_block:
             return GetTRepresentation();
-        case z_block:
+        case Shape::z_block:
             return GetZRepresentation();
     }
 }
@@ -41,25 +41,25 @@ GamePiece::GamePiece(Shape shape, Orientation orientation, int offsetX) : orient
 
 std::vector<std::vector<Occupancy>> GamePiece::GetIRepresentation() {
     switch (orientation_) {
-        case up:
+    case Orientation::up:
             return std::vector<std::vector<Occupancy>>
                     {{0,0,0,0},
                      {1,1,1,1},
                      {0,0,0,0},
                      {0,0,0,0}};
-        case right:
+    case Orientation::right:
             return std::vector<std::vector<Occupancy>>
                     {{0,0,1,0},
                      {0,0,1,0},
                      {0,0,1,0},
                      {0,0,1,0}};
-        case down:
+    case Orientation::down:
             return std::vector<std::vector<Occupancy>>
                     {{0,0,0,0},
                      {0,0,0,0},
                      {1,1,1,1},
                      {0,0,0,0}};
-        case left:
+    case Orientation::left:
             return std::vector<std::vector<Occupancy>>
                     {{0,1,0,0},
                      {0,1,0,0},
@@ -70,25 +70,25 @@ std::vector<std::vector<Occupancy>> GamePiece::GetIRepresentation() {
 
 std::vector<std::vector<Occupancy>> GamePiece::GetJRepresentation() {
     switch (orientation_) {
-        case up:
+    case Orientation::up:
             return std::vector<std::vector<Occupancy>>
                     {{1,0,0},
                      {1,1,1},
                      {0,0,0},
                      };
-        case right:
+    case Orientation::right:
             return std::vector<std::vector<Occupancy>>
                     {{0,1,1},
                      {0,1,0},
                      {0,1,0},
                     };
-        case down:
+    case Orientation::down:
             return std::vector<std::vector<Occupancy>>
                     {{0,0,0},
                      {1,1,1},
                      {0,0,1},
                     };
-        case left:
+    case Orientation::left:
             return std::vector<std::vector<Occupancy>>
                     {{0,1,0},
                      {0,1,0},
@@ -99,25 +99,25 @@ std::vector<std::vector<Occupancy>> GamePiece::GetJRepresentation() {
 
 std::vector<std::vector<Occupancy>> GamePiece::GetLRepresentation() {
     switch (orientation_) {
-        case up:
+    case Orientation::up:
             return std::vector<std::vector<Occupancy>>
                     {{0,0,1},
                      {1,1,1},
                      {0,0,0},
                     };
-        case right:
+    case Orientation::right:
             return std::vector<std::vector<Occupancy>>
                     {{0,1,0},
                      {0,1,0},
                      {0,1,1},
                     };
-        case down:
+    case Orientation::down:
             return std::vector<std::vector<Occupancy>>
                     {{0,0,0},
                      {1,1,1},
                      {1,0,0},
                     };
-        case left:
+    case Orientation::left:
             return std::vector<std::vector<Occupancy>>
                     {{1,1,0},
                      {0,1,0},
@@ -135,25 +135,25 @@ std::vector<std::vector<Occupancy>> GamePiece::GetORepresentation() {
 
 std::vector<std::vector<Occupancy>> GamePiece::GetSRepresentation() {
     switch (orientation_) {
-        case up:
+    case Orientation::up:
             return std::vector<std::vector<Occupancy>>
                     {{0,1,1},
                      {1,1,0},
                      {0,0,0},
                     };
-        case right:
+    case Orientation::right:
             return std::vector<std::vector<Occupancy>>
                     {{0,1,0},
                      {0,1,1},
                      {0,0,1},
                     };
-        case down:
+    case Orientation::down:
             return std::vector<std::vector<Occupancy>>
                     {{0,0,0},
                      {0,1,1},
                      {1,1,0},
                     };
-        case left:
+    case Orientation::left:
             return std::vector<std::vector<Occupancy>>
                     {{1,0,0},
                      {1,1,0},
@@ -164,25 +164,25 @@ std::vector<std::vector<Occupancy>> GamePiece::GetSRepresentation() {
 
 std::vector<std::vector<Occupancy>> GamePiece::GetTRepresentation() {
     switch (orientation_) {
-        case up:
+    case Orientation::up:
             return std::vector<std::vector<Occupancy>>
                     {{0,1,0},
                      {1,1,1},
                      {0,0,0},
                     };
-        case right:
+    case Orientation::right:
             return std::vector<std::vector<Occupancy>>
                     {{0,1,0},
                      {0,1,1},
                      {0,1,0},
                     };
-        case down:
+    case Orientation::down:
             return std::vector<std::vector<Occupancy>>
                     {{0,0,0},
                      {1,1,1},
                      {0,1,0},
                     };
-        case left:
+    case Orientation::left:
             return std::vector<std::vector<Occupancy>>
                     {{0,1,0},
                      {1,1,0},
@@ -193,25 +193,25 @@ std::vector<std::vector<Occupancy>> GamePiece::GetTRepresentation() {
 
 std::vector<std::vector<Occupancy>> GamePiece::GetZRepresentation() {
     switch (orientation_) {
-        case up:
+    case Orientation::up:
             return std::vector<std::vector<Occupancy>>
                     {{1,1,0},
                      {0,1,1},
                      {0,0,0},
                     };
-        case right:
+    case Orientation::right:
             return std::vector<std::vector<Occupancy>>
                     {{0,0,1},
                      {0,1,1},
                      {0,1,0},
                     };
-        case down:
+    case Orientation::down:
             return std::vector<std::vector<Occupancy>>
                     {{0,0,0},
                      {1,1,0},
                      {0,1,1},
                     };
-        case left:
+    case Orientation::left:
             return std::vector<std::vector<Occupancy>>
                     {{0,1,0},
                      {1,1,0},
