@@ -16,8 +16,8 @@
 #endif //CPP_TETRIS_MODEL_H
 #include <vector>
 
-enum Orientation{up, down, left, right};
-enum Shape{i_block=1, j_block=2, l_block=3, o_block=4, s_block=5, t_block=6, z_block=7};
+enum class Orientation{up, down, left, right};
+enum class Shape{i_block, j_block, l_block, o_block, s_block, t_block, z_block};
 typedef bool Occupancy; // 0=>empty 1=>occupied
 const int NumRowsBoard=19;
 const int NumColumnsBoard=10;
