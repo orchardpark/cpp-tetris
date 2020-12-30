@@ -11,6 +11,9 @@
 
 class Game{
 public:
+    /**
+    * Creates a new game instance
+    */
     Game();
     /**
      * Executes one time step (moving current piece down 1)
