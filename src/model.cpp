@@ -247,7 +247,7 @@ void GamePiece::MoveDown() {
 GameBoard InitBoard(){
     std::vector<std::vector<Shape>> v(NumRowsBoard);
     for(int i=0; i<NumRowsBoard; i++)
-        v[i] = std::vector<Shape>(NumColumnsBoard, (Shape)NULL);
+        v[i] = std::vector<Shape>(NumColumnsBoard, Shape::empty);
     return v;
 }
 
