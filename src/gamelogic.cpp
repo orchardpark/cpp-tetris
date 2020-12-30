@@ -24,7 +24,7 @@ bool Game::IsGameFinished() {
         auto representation = currentPiece_.GetRepresentation();
 
         auto FindHighestNonEmptyY = [representation]() {
-            unsigned int highest = representation.size() - 1;
+            int highest = representation.size() - 1;
             for (; highest >= 0; highest--) {
                 bool empty = true;
                 for(unsigned int i=0; i<representation[highest].size() && empty; i++){
@@ -55,7 +55,7 @@ bool Game::IsPieceBlocked() {
                int positionBelowY = offsetY-(int)j+1;
                int positionBelowX = offsetX+(int)i;
                // floor or already in place piece
-               if (positionBelowY >= 19 || board_[positionBelowY][positionBelowX]) blocked = true;
+               if (positionBelowY >= 19 || board_[positionBelowY][positionBelowX] != Shape::empty) blocked = true;
             }
         }
     }
@@ -71,7 +71,7 @@ void Game::ClearAndScore() {
         int positionY = offsetY-(int)j;
         bool full = true;
         for(unsigned int i=0; i<NumColumnsBoard && full; i++){
-            full = board_[positionY][i];
+            full = board_[positionY][i] != Shape::empty;
         }
         if(full) clearRows.push_back(positionY);
     }
@@ -79,7 +79,7 @@ void Game::ClearAndScore() {
         board_[row] = std::move(board_[row+1]);
     }
     if(!clearRows.empty() && clearRows.back()>0)
-        board_[clearRows.back()+1] = std::vector<Shape>(NumColumnsBoard, (Shape)NULL);
+        board_[clearRows.back()+1LL] = std::vector<Shape>(NumColumnsBoard, Shape::empty);
     // score clears
     if(clearRows.size()==1) score_ += 40;
     else if(clearRows.size()==2) score_ += 100;
