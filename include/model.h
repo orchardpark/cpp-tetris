@@ -17,7 +17,7 @@
 #include <vector>
 
 enum class Orientation{up, down, left, right};
-enum class Shape{i_block, j_block, l_block, o_block, s_block, t_block, z_block};
+enum class Shape{empty, i_block, j_block, l_block, o_block, s_block, t_block, z_block};
 typedef bool Occupancy; // 0=>empty 1=>occupied
 const int NumRowsBoard=19;
 const int NumColumnsBoard=10;
