@@ -32,3 +32,6 @@ cmake-build-debug/
 *.exe
 *.out
 *.app
+
+.vs/
+out/
