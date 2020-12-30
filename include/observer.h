@@ -5,13 +5,14 @@
 #define CPP_TETRIS_OBSERVER_H
 
 #include <memory>
+#include <string>
 /*
 * 
 */
 class IObserver {
 public:
 	virtual ~IObserver() {};
-	virtual void update(const string& message) = 0;
+	virtual void update(const std::string& message) = 0;
 };
 
 class ISubject {

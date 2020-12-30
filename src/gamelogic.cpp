@@ -1,6 +1,6 @@
 #include "../include/gamelogic.h"
 
-Game::Game() : currentPiece_(NextPiece()), score_(0), board_(InitBoard()), level_(1) {
+Game::Game() : currentPiece_(NextPiece()), score_(0), board_(GameBoard()), level_(1) {
 }
 
 GamePiece Game::NextPiece() {

@@ -15,6 +15,7 @@
 
 #endif //CPP_TETRIS_MODEL_H
 #include <vector>
+#include "../include/observer.h"
 
 enum class Orientation{up, down, left, right};
 enum class Shape{empty, i_block, j_block, l_block, o_block, s_block, t_block, z_block};
@@ -49,6 +50,16 @@ private:
     int offsetY_;
 };
 
-typedef std::vector<std::vector<Shape>> GameBoard;
+//typedef std::vector<std::vector<Shape>> GameBoard;
 
-GameBoard InitBoard();
+class GameBoard : ISubject{
+
+public:
+    GameBoard();
+    void attach(std::shared_ptr<IObserver> observer);
+    void detach(std::shared_ptr<IObserver> observer);
+
+    std::vector<Shape>& operator[](int);
+private:
+    std::vector<std::vector<Shape>> representation_;
+};

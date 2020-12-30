@@ -244,10 +244,21 @@ void GamePiece::MoveDown() {
     offsetY_++;
 }
 
-GameBoard InitBoard(){
+GameBoard::GameBoard(){
     std::vector<std::vector<Shape>> v(NumRowsBoard);
     for(int i=0; i<NumRowsBoard; i++)
         v[i] = std::vector<Shape>(NumColumnsBoard, Shape::empty);
-    return v;
+    representation_ = std::move(v);
 }
 
+void GameBoard::attach(std::shared_ptr<IObserver> observer) {
+
+}
+
+void GameBoard::detach(std::shared_ptr<IObserver> observer) {
+
+}
+
+std::vector<Shape>& GameBoard::operator[](int i) {
+    return representation_[i];
+}
