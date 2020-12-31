@@ -16,9 +16,16 @@
 #endif //CPP_TETRIS_MODEL_H
 #include <vector>
 #include "../include/observer.h"
+#include "../include/utils.h"
 
 enum class Orientation{up, down, left, right};
 enum class Shape{empty, i_block, j_block, l_block, o_block, s_block, t_block, z_block};
+struct ShapeComparison {
+    bool operator()(Shape const& lhs, Shape const& rhs) const 
+    {
+        return to_underlying(lhs) < to_underlying(rhs);
+    }
+};
 typedef bool Occupancy; // 0=>empty 1=>occupied
 const int NumRowsBoard=19;
 const int NumColumnsBoard=10;
