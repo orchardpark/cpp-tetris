@@ -3,6 +3,9 @@
 Game::Game() : currentPiece_(NextPiece()), score_(0), board_(GameBoard()), level_(1) {
 }
 
+Game::Game(GamePiece currentPiece, unsigned int score, GameBoard board, int level) : currentPiece_(currentPiece), score_(score), board_(board), level_(level){
+}
+
 GamePiece Game::NextPiece() {
     std::random_device device;
     std::mt19937 generator(device());

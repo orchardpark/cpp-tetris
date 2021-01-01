@@ -57,15 +57,12 @@ private:
     int offsetY_;
 };
 
-//typedef std::vector<std::vector<Shape>> GameBoard;
-
 class GameBoard : ISubject{
 
 public:
     GameBoard();
     void attach(std::shared_ptr<IObserver> observer);
     void detach(std::shared_ptr<IObserver> observer);
-
     std::vector<Shape>& operator[](int);
 private:
     std::vector<std::vector<Shape>> representation_;
