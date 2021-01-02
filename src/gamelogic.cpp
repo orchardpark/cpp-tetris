@@ -3,7 +3,15 @@
 Game::Game() : currentPiece_(NextPiece()), score_(0), board_(GameBoard()), level_(1) {
 }
 
-Game::Game(GamePiece currentPiece, unsigned int score, GameBoard board, int level) : currentPiece_(currentPiece), score_(score), board_(board), level_(level){
+Game::Game(GameState state) : currentPiece_(state.currentPiece), score_(state.score), board_(state.board), level_(state.level){
+}
+
+void Game::Run() {
+
+}
+
+void Game::Attach(std::shared_ptr<IObserver> observer) {
+    observers.emplace_back(observer);
 }
 
 GamePiece Game::NextPiece() {

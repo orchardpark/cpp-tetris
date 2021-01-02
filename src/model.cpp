@@ -19,19 +19,19 @@ void GamePiece::Rotate() {
 
 std::vector<std::vector<Occupancy>> GamePiece::GetRepresentation() {
     switch (shape_) {
-    case Shape::i_block:
+    case Shape::iBlock:
             return GetIRepresentation();
-        case Shape::j_block:
+        case Shape::jBlock:
             return GetJRepresentation();
-        case Shape::l_block:
+        case Shape::lBlock:
             return GetLRepresentation();
-        case Shape::o_block:
+        case Shape::oBlock:
             return GetORepresentation();
-        case Shape::s_block:
+        case Shape::sBlock:
             return GetSRepresentation();
-        case Shape::t_block:
+        case Shape::tBlock:
             return GetTRepresentation();
-        case Shape::z_block:
+        case Shape::zBlock:
             return GetZRepresentation();
     }
 }
@@ -249,14 +249,6 @@ GameBoard::GameBoard(){
     for(int i=0; i<NumRowsBoard; i++)
         v[i] = std::vector<Shape>(NumColumnsBoard, Shape::empty);
     representation_ = std::move(v);
-}
-
-void GameBoard::attach(std::shared_ptr<IObserver> observer) {
-
-}
-
-void GameBoard::detach(std::shared_ptr<IObserver> observer) {
-
 }
 
 std::vector<Shape>& GameBoard::operator[](int i) {

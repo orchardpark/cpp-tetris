@@ -13,13 +13,11 @@
 #ifndef CPP_TETRIS_MODEL_H
 #define CPP_TETRIS_MODEL_H
 
-#endif //CPP_TETRIS_MODEL_H
 #include <vector>
-#include "../include/observer.h"
 #include "../include/utils.h"
 
 enum class Orientation{up, down, left, right};
-enum class Shape{empty, i_block, j_block, l_block, o_block, s_block, t_block, z_block};
+enum class Shape{empty, iBlock, jBlock, lBlock, oBlock, sBlock, tBlock, zBlock};
 struct ShapeComparison {
     bool operator()(Shape const& lhs, Shape const& rhs) const 
     {
@@ -57,13 +55,19 @@ private:
     int offsetY_;
 };
 
-class GameBoard : ISubject{
+class GameBoard{
 
 public:
     GameBoard();
-    void attach(std::shared_ptr<IObserver> observer);
-    void detach(std::shared_ptr<IObserver> observer);
     std::vector<Shape>& operator[](int);
 private:
     std::vector<std::vector<Shape>> representation_;
 };
+
+struct GameState {
+    GameBoard board;
+    GamePiece currentPiece;
+    int score;
+    int level;
+};
+#endif //CPP_TETRIS_MODEL_H

@@ -5,8 +5,8 @@ C++ implementation of the Tetris game.
 ## Installation
 
 Requirements:
-- [SDL2](https://wiki.libsdl.org/Installation)
 - [CMake](https://cmake.org/) 3.16 or higher.
+- [SDL2](https://www.libsdl.org/download-2.0.php) (Included in the project)
 - [GTest](https://github.com/google/googletest) (Included in the project)
 
 In order to build this game first create the build directory
@@ -15,4 +15,5 @@ In order to build this game first create the build directory
 executing `./cpp-tetris`.
 
 ## Architecture
+
 

@@ -6,19 +6,20 @@
 
 #include <memory>
 #include <string>
+#include "model.h"
 /*
 * 
 */
 class IObserver {
 public:
 	virtual ~IObserver() {};
-	virtual void update(const std::string& message) = 0;
+	virtual void Update(const GameState& state) = 0;
 };
 
 class ISubject {
 public:
 	virtual ~ISubject() {};
-	virtual void attach(std::shared_ptr<IObserver> observer) = 0;
-	virtual void detach(std::shared_ptr<IObserver> observer) = 0;
+	virtual void Attach(std::shared_ptr<IObserver> observer) = 0;
+	virtual void Detach(std::shared_ptr<IObserver> observer) = 0;
 };
-#endif CPP_TETRIS_OBSERVER_H
+#endif //CPP_TETRIS_OBSERVER_H

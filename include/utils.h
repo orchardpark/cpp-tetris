@@ -9,4 +9,4 @@ constexpr auto to_underlying(E e) noexcept
     return static_cast<std::underlying_type_t<E>>(e);
 }
 
-#endif CPP_TETRIS_UTILS_H
+#endif //CPP_TETRIS_UTILS_H

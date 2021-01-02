@@ -1,6 +1,7 @@
 #include <iostream>
+#include "../include/textui.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
-    return 0;
+	TextUI ui;
+	ui.Run();
 }
