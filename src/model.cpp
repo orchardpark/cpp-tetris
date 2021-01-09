@@ -225,7 +225,7 @@ void GamePiece::MoveLeft() {
 }
 
 void GamePiece::MoveRight() {
-    if(offsetX_ < NumColumnsBoard-1) offsetX_++;
+    if(offsetX_ < NumColumnsBoard-1-4) offsetX_++;
 }
 
 int GamePiece::GetOffsetY() {
@@ -244,6 +244,30 @@ void GamePiece::MoveDown() {
     offsetY_++;
 }
 
+std::string ShapeToString(Shape shape) {
+    switch (shape)
+    {
+    case Shape::empty:
+        return "-";
+    case Shape::iBlock:
+        return "I";
+    case Shape::jBlock:
+        return "J";
+    case Shape::lBlock:
+        return "L";
+    case Shape::oBlock:
+        return "O";
+    case Shape::sBlock:
+        return "S";
+    case Shape::tBlock:
+        return "T";
+    case Shape::zBlock:
+        return "Z";
+    default:
+        return "";
+    }
+}
+
 GameBoard::GameBoard(){
     std::vector<std::vector<Shape>> v(NumRowsBoard);
     for(int i=0; i<NumRowsBoard; i++)
@@ -251,6 +275,20 @@ GameBoard::GameBoard(){
     representation_ = std::move(v);
 }
 
+std::string GameBoard::ToString() {
+    std::string res = "";
+    for (int i = 0; i < NumRowsBoard; i++) {
+        for (int j = 0; j < NumColumnsBoard; j++) {
+            Shape s = representation_[i][j];
+            res += ShapeToString(s);
+        } res += "\n";
+    }
+    return res;
+}
+
 std::vector<Shape>& GameBoard::operator[](int i) {
     return representation_[i];
+}
+
+GameState::GameState(GameBoard board, GamePiece piece, int score, int level) : board(board), currentPiece(piece), score(score), level(level) {
 }
