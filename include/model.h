@@ -15,9 +15,11 @@
 
 #include <vector>
 #include "../include/utils.h"
+#include <string>
 
 enum class Orientation{up, down, left, right};
 enum class Shape{empty, iBlock, jBlock, lBlock, oBlock, sBlock, tBlock, zBlock};
+std::string ShapeToString(Shape s);
 struct ShapeComparison {
     bool operator()(Shape const& lhs, Shape const& rhs) const 
     {
@@ -30,14 +32,49 @@ const int NumColumnsBoard=10;
 
 class GamePiece{
 public:
+    /*
+    * Instantiates a new Gamepiece
+    * @param shape The block shape
+    * @param orientation The orientation of the block
+    * @param offsetX Where on the board (horizontally) will the block be spawmed
+    */
     GamePiece(Shape shape, Orientation orientation, int offsetX);
+    /*
+    * Rotates the piece 90 degrees clockwise
+    */
     void Rotate();
+    /*
+    * Moves the piece to the left
+    */
     void MoveLeft();
+    /*
+    * Moves the piece to the right
+    */
     void MoveRight();
+    /*
+    * Moves the piece down
+    */
     void MoveDown();
+    /*
+    * Get the representation for this piece
+    * The representation will be a boolean matrix
+    * where 0 reprents empty space and 1 is a block of the piece
+    * (0,0) represents the top left corner
+    */
     std::vector<std::vector<Occupancy>> GetRepresentation();
+    /*
+    * Gets the vertical offset. If the yOffset is 0, that means that the bottom of the representation
+    * matches up with the top of the board
+    */
     int GetOffsetY();
+    /*
+    * Gets the the horizontal offset
+    * @invariant 0<=result<NumColumns-GetRepresentation().size()
+    */
     int GetOffsetX();
+    /*
+    * Returns the block shape
+    */
     Shape GetShape();
 
 private:
@@ -48,6 +85,7 @@ private:
     std::vector<std::vector<Occupancy>> GetSRepresentation();
     std::vector<std::vector<Occupancy>> GetTRepresentation();
     std::vector<std::vector<Occupancy>> GetZRepresentation();
+    int maxXOffset();
 
     Shape shape_;
     Orientation orientation_;
@@ -60,14 +98,17 @@ class GameBoard{
 public:
     GameBoard();
     std::vector<Shape>& operator[](int);
+    std::string ToString();
 private:
     std::vector<std::vector<Shape>> representation_;
 };
-
 struct GameState {
+    GameState(GameBoard board, GamePiece piece, int score, int level);
     GameBoard board;
     GamePiece currentPiece;
     int score;
     int level;
 };
+
+
 #endif //CPP_TETRIS_MODEL_H
