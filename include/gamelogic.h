@@ -10,7 +10,10 @@
 #include "textui.h"
 #include <random>
 #include <vector>
-class Game : ISubject{
+#include <chrono>
+#include <thread>
+
+class Game : public ISubject{
 public:
     /**
     * Creates a new game instance
@@ -24,7 +27,8 @@ public:
     * Run the game
     */
     void Run();
-    void Attach(std::shared_ptr<IObserver> observer);
+    void Attach(IObserver* observer);
+    void Detach(IObserver* observer);
         
 private:
 	/**
@@ -38,10 +42,7 @@ private:
     void AddPieceToBoard();
     void ClearAndScore();
 
-    GameBoard board_;
-    unsigned int score_;
-    GamePiece currentPiece_;
-    int level_;
-    std::vector<std::shared_ptr<IObserver>> observers;
+    GameState gameState_;
+    std::vector<IObserver*> observers;
 };
 #endif //CPP_TETRIS_GAMELOGIC_H
