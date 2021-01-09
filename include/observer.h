@@ -4,7 +4,6 @@
 #ifndef CPP_TETRIS_OBSERVER_H
 #define CPP_TETRIS_OBSERVER_H
 
-#include <memory>
 #include <string>
 #include "model.h"
 /*
@@ -19,7 +18,7 @@ public:
 class ISubject {
 public:
 	virtual ~ISubject() {};
-	virtual void Attach(std::shared_ptr<IObserver> observer) = 0;
-	virtual void Detach(std::shared_ptr<IObserver> observer) = 0;
+	virtual void Attach(IObserver* observer) = 0;
+	virtual void Detach(IObserver* observer) = 0;
 };
 #endif //CPP_TETRIS_OBSERVER_H
