@@ -87,7 +87,6 @@ private:
     std::vector<std::vector<Occupancy>> GetSRepresentation();
     std::vector<std::vector<Occupancy>> GetTRepresentation();
     std::vector<std::vector<Occupancy>> GetZRepresentation();
-    int maxXOffset();
 
     Shape shape_;
     Orientation orientation_;
