@@ -41,7 +41,7 @@ bool Game::IsGameFinished() {
         auto representation = gameState_.currentPiece.GetRepresentation();
 
         auto FindHighestNonEmptyY = [representation]() {
-            int highest = representation.size() - 1;
+            int highest = (int)representation.size() - 1;
             for (; highest >= 0; highest--) {
                 bool empty = true;
                 for(unsigned int i=0; i<representation[highest].size() && empty; i++){
@@ -69,13 +69,13 @@ bool Game::IsPieceBlocked() {
         for(unsigned int i=0; i<representation[j].size() && !blocked; i++){
             // non-empty
             if(representation[j][i]){
-               int positionBelowY = offsetY-(int)j+1;
+               int positionBelowY = offsetY+(int)j-(int)representation.size()+1;
                int positionBelowX = offsetX+(int)i;
-               if (gameState_.board[0][0] != Shape::empty) {
-                   std::cout << "hello world\n";
-               }
+               // not on the board
+               if(positionBelowY < 0)
+                   ;
                // floor or already in place piece
-               if (positionBelowY >= NumRowsBoard || gameState_.board[positionBelowY][positionBelowX] != Shape::empty) blocked = true;
+               else if (positionBelowY >= NumRowsBoard || gameState_.board[positionBelowY][positionBelowX] != Shape::empty) blocked = true;
             }
         }
     }
