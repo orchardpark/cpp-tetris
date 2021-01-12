@@ -277,17 +277,6 @@ GameBoard::GameBoard(){
     representation_ = std::move(v);
 }
 
-std::string GameBoard::ToString() {
-    std::string res = "";
-    for (int i = 0; i < NumRowsBoard; i++) {
-        for (int j = 0; j < NumColumnsBoard; j++) {
-            Shape s = representation_[i][j];
-            res += ShapeToString(s);
-        } res += "\n";
-    }
-    return res;
-}
-
 std::vector<Shape>& GameBoard::operator[](int i) {
     return representation_[i];
 }

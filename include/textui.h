@@ -11,6 +11,7 @@ public:
 	void Run();
 	void Update(const GameState& state);
 private:
+    std::string StateToString(const GameState& state);
 };
 
 #endif // !CPP_TETRIS_TEXTUI_H

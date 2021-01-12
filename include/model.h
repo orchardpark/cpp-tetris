@@ -99,7 +99,6 @@ class GameBoard{
 public:
     GameBoard();
     std::vector<Shape>& operator[](int);
-    std::string ToString();
 private:
     std::vector<std::vector<Shape>> representation_;
 };
