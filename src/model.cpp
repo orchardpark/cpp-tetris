@@ -33,6 +33,8 @@ std::vector<std::vector<Occupancy>> GamePiece::GetRepresentation() {
             return GetTRepresentation();
         case Shape::zBlock:
             return GetZRepresentation();
+        default:
+            return std::vector<std::vector<Occupancy>>{{0}};
     }
 }
 
@@ -59,7 +61,7 @@ std::vector<std::vector<Occupancy>> GamePiece::GetIRepresentation() {
                      {0,0,0,0},
                      {1,1,1,1},
                      {0,0,0,0}};
-    case Orientation::left:
+    default:
             return std::vector<std::vector<Occupancy>>
                     {{0,1,0,0},
                      {0,1,0,0},
@@ -88,7 +90,7 @@ std::vector<std::vector<Occupancy>> GamePiece::GetJRepresentation() {
                      {1,1,1},
                      {0,0,1},
                     };
-    case Orientation::left:
+    default:
             return std::vector<std::vector<Occupancy>>
                     {{0,1,0},
                      {0,1,0},
@@ -117,7 +119,7 @@ std::vector<std::vector<Occupancy>> GamePiece::GetLRepresentation() {
                      {1,1,1},
                      {1,0,0},
                     };
-    case Orientation::left:
+    default:
             return std::vector<std::vector<Occupancy>>
                     {{1,1,0},
                      {0,1,0},
@@ -153,7 +155,7 @@ std::vector<std::vector<Occupancy>> GamePiece::GetSRepresentation() {
                      {0,1,1},
                      {1,1,0},
                     };
-    case Orientation::left:
+    default:
             return std::vector<std::vector<Occupancy>>
                     {{1,0,0},
                      {1,1,0},
@@ -182,7 +184,7 @@ std::vector<std::vector<Occupancy>> GamePiece::GetTRepresentation() {
                      {1,1,1},
                      {0,1,0},
                     };
-    case Orientation::left:
+    default:
             return std::vector<std::vector<Occupancy>>
                     {{0,1,0},
                      {1,1,0},
@@ -211,7 +213,7 @@ std::vector<std::vector<Occupancy>> GamePiece::GetZRepresentation() {
                      {1,1,0},
                      {0,1,1},
                     };
-    case Orientation::left:
+    default:
             return std::vector<std::vector<Occupancy>>
                     {{0,1,0},
                      {1,1,0},
