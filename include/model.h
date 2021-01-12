@@ -66,7 +66,7 @@ public:
     * Gets the vertical offset. If the yOffset is 0, that means that the bottom of the representation
     * matches up with the top of the board. More precisely, the y-coordinate (in the frame of the board)
     * of the bottom of the representation (that is, the highest numbered row in the representation).
-    * will be at position 0.
+    * will be at position -1.
     */
     int GetOffsetY();
     /*

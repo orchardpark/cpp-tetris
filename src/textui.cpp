@@ -26,7 +26,7 @@ void TextUI::Update(const GameState& state)
 	std::cout << "score: " << state.score << std::endl;
 	std::cout << "level: " << state.level << std::endl;
 	std::cout << "piece: " << ShapeToString(shape) << std::endl;
-	std::cout << "gameboard" << board.ToString() << std::endl;
+	std::cout << "game board" << board.ToString() << std::endl;
 	std::cout << std::endl;
 }
 
