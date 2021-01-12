@@ -58,7 +58,7 @@ public:
     /*
     * Get the representation for this piece
     * The representation will be a boolean matrix
-    * where 0 reprents empty space and 1 is a block of the piece
+    * where 0 represents empty space and 1 is a block of the piece
     * (0,0) represents the top left corner
     */
     std::vector<std::vector<Occupancy>> GetRepresentation();
