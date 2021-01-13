@@ -29,7 +29,6 @@ std::string TextUI::StateToString(const GameState &state) {
 	auto score = state.score;
 	auto level = state.level;
 	auto board = state.board;
-
-
+	return "";
 }
 

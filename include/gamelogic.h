@@ -12,6 +12,7 @@
 #include <vector>
 #include <chrono>
 #include <thread>
+#include <utility>
 
 class Game : public ISubject{
 public:
@@ -20,7 +21,7 @@ public:
     */
     Game();
     /*
-    * Creates a new game from specified gamestate
+    * Creates a new game from specified game state
     */
     Game(GameState state);
     /*
@@ -42,7 +43,10 @@ private:
     void AddPieceToBoard();
     void ClearAndScore();
 
+    void CreateRandomGenerator();
+
     GameState gameState_;
     std::vector<IObserver*> observers;
+    std::unique_ptr<std::mt19937> generator;
 };
 #endif //CPP_TETRIS_GAMELOGIC_H

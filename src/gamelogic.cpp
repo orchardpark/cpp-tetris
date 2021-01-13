@@ -1,8 +1,9 @@
 #include "../include/gamelogic.h"
+
 Game::Game() : gameState_(GameState(GameBoard(), NextPiece(), 0, 1)){
 }
 
-Game::Game(GameState state) : gameState_(state){
+Game::Game(GameState state) : gameState_(std::move(state)){
 }
 
 void Game::Run() {
@@ -20,16 +21,19 @@ void Game::Detach(IObserver* observer) {
     //@TODO
 }
 
-GamePiece Game::NextPiece() {
+void Game::CreateRandomGenerator() {
     std::random_device device;
-    std::mt19937 generator(device());
+    generator = std::make_unique<std::mt19937>(device());
+}
+
+GamePiece Game::NextPiece() {
     std::uniform_int_distribution<int> shape_distribution(1,7);
     std::uniform_int_distribution<int> orientation_distribution(0, 3);
     std::uniform_int_distribution<int> offsetX_distribution(0, NumColumnsBoard-1-4);
     return GamePiece(
-            (Shape)shape_distribution(generator),
-            (Orientation)orientation_distribution(generator),
-            offsetX_distribution(generator));
+            (Shape)shape_distribution(*generator),
+            (Orientation)orientation_distribution(*generator),
+            offsetX_distribution(*generator));
 }
 
 bool Game::IsGameFinished() {
@@ -99,7 +103,7 @@ void Game::ClearAndScore() {
         gameState_.board[row] = std::move(gameState_.board[row+1]);
     }
     if(!clearRows.empty() && clearRows.back()>0)
-        gameState_.board[clearRows.back()+1LL] = std::vector<Shape>(NumColumnsBoard, Shape::empty);
+        gameState_.board[clearRows.back()+1] = std::vector<Shape>(NumColumnsBoard, Shape::empty);
     // score clears
     if(clearRows.size()==1) gameState_.score += 40;
     else if(clearRows.size()==2) gameState_.score += 100;
