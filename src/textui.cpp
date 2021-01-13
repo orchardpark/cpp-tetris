@@ -25,6 +25,11 @@ void TextUI::Update(const GameState& state)
 }
 
 std::string TextUI::StateToString(const GameState &state) {
-    return std::string();
+	auto gamePiece = state.currentPiece;
+	auto score = state.score;
+	auto level = state.level;
+	auto board = state.board;
+
+
 }
 
