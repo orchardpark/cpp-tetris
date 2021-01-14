@@ -11,15 +11,9 @@ void TextUI::Run()
 	std::thread t (StartGame, std::move(g));
 	t.join();
 }
-void ClearScreen()
-{
-	int n;
-	for (n = 0; n < 10; n++)
-		printf("\n\n\n\n\n\n\n\n\n\n");
-}
+
 void TextUI::Update(const GameState& state) 
 {
-	//ClearScreen();
 	std::cout << StateToString(state);
 }
 
@@ -49,8 +43,8 @@ std::string TextUI::StateToString(const GameState &state)
 	std::string boardString;
 	for(int j=0;j<boardRepresentation.size(); j++){
 	    for(int i=0; i<boardRepresentation[j].size(); i++){
-	        std::cout << ShapeToString(boardRepresentation[j][i]);
-	    } std::cout << std::endl;
+	        boardString += ShapeToString(boardRepresentation[j][i]);
+	    } boardString += "\n";
 	}
 
 
