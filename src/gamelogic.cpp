@@ -1,14 +1,19 @@
 #include "../include/gamelogic.h"
+std::random_device device;
+std::mt19937 generator(device());
+
 
 Game::Game() : gameState_(GameState(GameBoard(), NextPiece(), 0, 1)){
+    CreateRandomGenerator();
 }
 
 Game::Game(GameState state) : gameState_(std::move(state)){
+    CreateRandomGenerator();
 }
 
 void Game::Run() {
 	while (!IsGameFinished()) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(400));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         ExecuteTimeStep();
 	}
 }
@@ -22,8 +27,6 @@ void Game::Detach(IObserver* observer) {
 }
 
 void Game::CreateRandomGenerator() {
-    std::random_device device;
-    generator = std::make_unique<std::mt19937>(device());
 }
 
 GamePiece Game::NextPiece() {
@@ -31,9 +34,9 @@ GamePiece Game::NextPiece() {
     std::uniform_int_distribution<int> orientation_distribution(0, 3);
     std::uniform_int_distribution<int> offsetX_distribution(0, NumColumnsBoard-1-4);
     return GamePiece(
-            (Shape)shape_distribution(*generator),
-            (Orientation)orientation_distribution(*generator),
-            offsetX_distribution(*generator));
+            (Shape)shape_distribution(generator),
+            (Orientation)orientation_distribution(generator),
+            offsetX_distribution(generator));
 }
 
 bool Game::IsGameFinished() {
@@ -69,12 +72,12 @@ bool Game::IsPieceBlocked() {
     auto representation = gameState_.currentPiece.GetRepresentation();
     int offsetY = gameState_.currentPiece.GetOffsetY();
     int offsetX = gameState_.currentPiece.GetOffsetX();
-    for(unsigned int j=0; j<representation.size() && !blocked; j++){
-        for(unsigned int i=0; i<representation[j].size() && !blocked; i++){
+    for(int j=0; j<representation.size() && !blocked; j++){
+        for(int i=0; i<representation[j].size() && !blocked; i++){
             // non-empty
             if(representation[j][i]){
-               int positionBelowY = offsetY+(int)j-(int)representation.size()+1;
-               int positionBelowX = offsetX+(int)i;
+               int positionBelowY = offsetY+j-(int)representation.size()+1;
+               int positionBelowX = offsetX+i;
                // not on the board
                if(positionBelowY < 0)
                    ;
@@ -92,7 +95,7 @@ void Game::ClearAndScore() {
     auto representation = gameState_.currentPiece.GetRepresentation();
     int offsetY = gameState_.currentPiece.GetOffsetY();
     for(unsigned int j=0; j<representation.size(); j++){
-        int positionY = offsetY-(int)j;
+        int positionY = offsetY+(int)j-(int)representation.size();
         bool full = true;
         for(unsigned int i=0; i<NumColumnsBoard && full; i++){
             full = gameState_.board[positionY][i] != Shape::empty;
@@ -119,7 +122,7 @@ void Game::AddPieceToBoard() {
     Shape shape = gameState_.currentPiece.GetShape();
     for(unsigned int j=0; j<representation.size(); j++){
         for(unsigned int i=0; i<representation[j].size(); i++){
-            int positionY = offsetY-(int)j;
+            int positionY = offsetY+(int)j-(int)representation.size();
             int positionX = offsetX+(int)i;
             // non-empty
             if(representation[j][i] && positionY>0){

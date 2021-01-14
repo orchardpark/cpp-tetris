@@ -33,10 +33,10 @@ const int NumColumnsBoard=10;
 class GamePiece{
 public:
     /*
-    * Instantiates a new Gamepiece
+    * Instantiates a new GamePiece
     * @param shape The block shape
     * @param orientation The orientation of the block
-    * @param offsetX Where on the board (horizontally) will the block be spawmed
+    * @param offsetX Where on the board (horizontally) will the block be spawned
     */
     GamePiece(Shape shape, Orientation orientation, int offsetX);
     /*
@@ -99,6 +99,7 @@ class GameBoard{
 public:
     GameBoard();
     std::vector<Shape>& operator[](int);
+    std::vector<std::vector<Shape>> GetRepresentation();
 private:
     std::vector<std::vector<Shape>> representation_;
 };

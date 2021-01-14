@@ -47,6 +47,5 @@ private:
 
     GameState gameState_;
     std::vector<IObserver*> observers;
-    std::unique_ptr<std::mt19937> generator;
 };
 #endif //CPP_TETRIS_GAMELOGIC_H

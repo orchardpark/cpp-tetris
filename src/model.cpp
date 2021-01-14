@@ -277,6 +277,10 @@ GameBoard::GameBoard(){
     representation_ = std::move(v);
 }
 
+std::vector<std::vector<Shape>> GameBoard::GetRepresentation() {
+    return representation_;
+}
+
 std::vector<Shape>& GameBoard::operator[](int i) {
     return representation_[i];
 }
