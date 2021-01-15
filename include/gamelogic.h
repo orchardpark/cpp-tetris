@@ -7,7 +7,6 @@
 
 #include "model.h"
 #include "observer.h"
-#include "textui.h"
 #include <random>
 #include <vector>
 #include <chrono>

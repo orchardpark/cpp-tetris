@@ -1,6 +1,5 @@
 #include "gtest/gtest.h"
 #include "../include/gamelogic.h"
-#include <set>
 
 
 int main(int argc, char** argv) {
