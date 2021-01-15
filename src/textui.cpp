@@ -4,6 +4,11 @@ void StartGame(std::unique_ptr<Game> g)
 {
 	g->Run();
 }
+
+void RunKeyboardController(){
+
+};
+
 void TextUI::Run() 
 {
 	auto g = std::make_unique<Game>();
