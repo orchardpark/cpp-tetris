@@ -1,20 +1,74 @@
 #include "../include/textui.h"
 
+bool quit = false;
+
 void StartGame(std::unique_ptr<Game> g) 
 {
 	g->Run();
+	quit = true;
 }
 
-void RunKeyboardController(){
+void RunKeyboardController()
+{
+	/* Initialise SDL */
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {	
+		fprintf(stderr, "Could not initialise SDL: %s\n", SDL_GetError());
+		exit(-1);
+	}
 
+	SDL_Window* window = NULL;
+	SDL_Surface* screenSurface = NULL;
+	int SCREEN_WIDTH = 1024;
+	int SCREEN_HEIGHT = 786;
+
+	window = SDL_CreateWindow("Sphere Rendering",
+		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+		SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+
+	if (window == NULL) {
+		fprintf(stderr, "Window could not be created: %s\n", SDL_GetError());
+		exit(1);
+	}
+
+	screenSurface = SDL_GetWindowSurface(window);
+
+	if (!screenSurface) {
+		fprintf(stderr, "Screen surface could not be created: %s\n", SDL_GetError());
+		SDL_Quit();
+		exit(1);
+	}
+
+	while (!quit) {
+		SDL_Event event;
+		/* Poll for events. SDL_PollEvent() returns 0 when there are no  */
+		/* more events on the event queue, our while loop will exit when */
+		/* that occurs.                                                  */
+		while (SDL_PollEvent(&event)) {
+			/* We are only worried about SDL_KEYDOWN and SDL_KEYUP events */
+			switch (event.type) {
+			case SDL_KEYDOWN:
+				printf("Key press detected\n");
+				break;
+
+			case SDL_KEYUP:
+				printf("Key release detected\n");
+				break;
+
+			default:
+				break;
+			}
+		}
+	}
 };
 
 void TextUI::Run() 
 {
 	auto g = std::make_unique<Game>();
 	g->Attach(this);
-	std::thread t (StartGame, std::move(g));
-	t.join();
+	std::thread gameThread (StartGame, std::move(g));
+	std::thread controllerThread(RunKeyboardController);
+	gameThread.join();
+	controllerThread.join();
 }
 
 void TextUI::Update(const GameState& state) 
