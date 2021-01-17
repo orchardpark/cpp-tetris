@@ -27,7 +27,14 @@ public:
     * Run the game
     */
     void Run();
+    /*
+    * Attach observer to the game
+    * @param observer Observer object (e.g. a GUI) that observes changes to the game
+    */
     void Attach(IObserver* observer);
+    /*
+    * Detach observer from the game
+    */
     void Detach(IObserver* observer);
         
 private:
@@ -41,7 +48,6 @@ private:
     bool IsPieceBlocked();
     void AddPieceToBoard();
     void ClearAndScore();
-
     void CreateRandomGenerator();
 
     GameState gameState_;
