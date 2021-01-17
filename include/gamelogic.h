@@ -13,6 +13,13 @@
 #include <thread>
 #include <utility>
 
+enum class GameInput {
+    MOVE_DOWN,
+    MOVE_LEFT,
+    MOVE_RIGHT,
+    ROTATE
+};
+
 class Game : public ISubject{
 public:
     /**
@@ -36,6 +43,12 @@ public:
     * Detach observer from the game
     */
     void Detach(IObserver* observer);
+
+    /*
+    * Send keyboard input to game
+    * @param input (move down, left, right, rotate)
+    */
+    void SendGameInput(GameInput input);
         
 private:
 	/**

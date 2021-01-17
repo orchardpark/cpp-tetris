@@ -146,3 +146,20 @@ bool Game::ExecuteTimeStep() {
     }
     return true;
 }
+
+void Game::SendGameInput(GameInput input) {
+	switch (input) {
+	case GameInput::MOVE_DOWN:
+        gameState_.currentPiece.MoveDown();
+		break;
+    case GameInput::MOVE_LEFT:
+        gameState_.currentPiece.MoveLeft();
+        break;
+    case GameInput::MOVE_RIGHT:
+        gameState_.currentPiece.MoveRight();
+        break;
+    case GameInput::ROTATE:
+        gameState_.currentPiece.Rotate();
+        break;
+	}
+}
