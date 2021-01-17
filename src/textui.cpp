@@ -2,16 +2,17 @@
 
 bool quit = false;
 
-void StartGame(std::unique_ptr<Game> g) 
+void StartGame(std::shared_ptr<Game> game)
 {
-	g->Run();
+	game->Run();
 	quit = true;
 }
 
-void RunKeyboardController()
-{
-	/* Initialise SDL */
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {	
+/*
+* Sets up the screen
+*/
+void Initialize_SDL() {
+	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		fprintf(stderr, "Could not initialise SDL: %s\n", SDL_GetError());
 		exit(-1);
 	}
@@ -24,7 +25,6 @@ void RunKeyboardController()
 	window = SDL_CreateWindow("Sphere Rendering",
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-
 	if (window == NULL) {
 		fprintf(stderr, "Window could not be created: %s\n", SDL_GetError());
 		exit(1);
@@ -37,6 +37,11 @@ void RunKeyboardController()
 		SDL_Quit();
 		exit(1);
 	}
+}
+
+void RunKeyboardController(std::shared_ptr<Game> game)
+{
+	Initialize_SDL();
 
 	while (!quit) {
 		SDL_Event event;
@@ -47,15 +52,22 @@ void RunKeyboardController()
 			/* We are only worried about SDL_KEYDOWN and SDL_KEYUP events */
 			switch (event.type) {
 			case SDL_KEYDOWN:
-				printf("Key press detected\n");
-				break;
-
-			case SDL_KEYUP:
-				printf("Key release detected\n");
-				break;
-
-			default:
-				break;
+				switch (event.key.keysym.scancode) {
+				case SDL_SCANCODE_DOWN:
+					game->SendGameInput(GameInput::MOVE_DOWN);
+					break;
+				case SDL_SCANCODE_UP:
+					game->SendGameInput(GameInput::ROTATE);
+					break;
+				case SDL_SCANCODE_LEFT:
+					game->SendGameInput(GameInput::MOVE_LEFT);
+					break;
+				case SDL_SCANCODE_RIGHT:
+					game->SendGameInput(GameInput::MOVE_RIGHT);
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}
@@ -63,10 +75,10 @@ void RunKeyboardController()
 
 void TextUI::Run() 
 {
-	auto g = std::make_unique<Game>();
+	auto g = std::make_shared<Game>();
 	g->Attach(this);
-	std::thread gameThread (StartGame, std::move(g));
-	std::thread controllerThread(RunKeyboardController);
+	std::thread gameThread (StartGame, g);
+	std::thread controllerThread(RunKeyboardController, g);
 	gameThread.join();
 	controllerThread.join();
 }
