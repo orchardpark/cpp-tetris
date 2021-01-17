@@ -13,7 +13,7 @@ Game::Game(GameState state) : gameState_(std::move(state)){
 
 void Game::Run() {
 	while (!IsGameFinished()) {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000/gameState_.level));
         ExecuteTimeStep();
 	}
 }
