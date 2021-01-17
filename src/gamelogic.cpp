@@ -59,7 +59,7 @@ bool Game::IsGameFinished() {
         };
 
         auto highestNonEmptyY = FindHighestNonEmptyY();
-        if(gameState_.currentPiece.GetOffsetY()-highestNonEmptyY < 0) finished=true;
+        if(gameState_.currentPiece.GetOffsetY()-highestNonEmptyY-1 < 0) finished=true;
     }
     return finished;
 
@@ -94,7 +94,18 @@ void Game::ClearAndScore() {
     std::vector<int> clearRows;
     auto representation = gameState_.currentPiece.GetRepresentation();
     int offsetY = gameState_.currentPiece.GetOffsetY();
+
+    auto HasNonEmptyRow = [representation](int j) {
+        bool hasNonEmpty = false;
+        for (int i = 0; i < representation[j].size() && !hasNonEmpty; i++) {
+            hasNonEmpty = representation[j][i];
+        }
+        return hasNonEmpty;
+    };
+
     for(unsigned int j=0; j<representation.size(); j++){
+        if (!HasNonEmptyRow(j)) 
+            continue;
         int positionY = offsetY+(int)j-(int)representation.size();
         bool full = true;
         for(unsigned int i=0; i<NumColumnsBoard && full; i++){
