@@ -41,25 +41,25 @@ GamePiece Game::NextPiece() {
 
 bool Game::IsGameFinished() {
     // In order for the game to be finished, the piece must be blocked and stick out
-    // the top of the game board. That is, the highest y-coordinate an non-empty square
-    // of the piece is lower than 0.
+    // the top of the game board. That is, the lowest y-coordinate of an non-empty square
+    // in the reference frame of the piece is lower than 0 in the reference frame of the board
     bool finished= false;
     if(IsPieceBlocked()){
         auto representation = gameState_.currentPiece.GetRepresentation();
 
-        auto FindHighestNonEmptyY = [representation]() {
-            int highest = (int)representation.size() - 1;
-            for (; highest >= 0; highest--) {
+        auto FindLowestNonEmptyY = [representation]() {
+            int lowest = 0;
+            for (; lowest < representation.size(); lowest++) {
                 bool empty = true;
-                for(unsigned int i=0; i<representation[highest].size() && empty; i++){
-                    empty = !representation[highest][i];
+                for(unsigned int i=0; i<representation[lowest].size() && empty; i++){
+                    empty = !representation[lowest][i];
                 }
             }
-            return highest;
+            return lowest;
         };
 
-        auto highestNonEmptyY = FindHighestNonEmptyY();
-        if(gameState_.currentPiece.GetOffsetY()-highestNonEmptyY-1 < 0) finished=true;
+        auto lowestNonEmptyY = FindLowestNonEmptyY();
+        if(PieceToBoardYCoordinate(lowestNonEmptyY) < 0) finished=true;
     }
     return finished;
 
@@ -70,14 +70,12 @@ bool Game::IsPieceBlocked() {
     // are directly below one of its non-empty squares.
     bool blocked = false;
     auto representation = gameState_.currentPiece.GetRepresentation();
-    int offsetY = gameState_.currentPiece.GetOffsetY();
-    int offsetX = gameState_.currentPiece.GetOffsetX();
     for(int j=0; j<representation.size() && !blocked; j++){
         for(int i=0; i<representation[j].size() && !blocked; i++){
             // non-empty
             if(representation[j][i]){
-               int positionBelowY = offsetY+j-(int)representation.size()+1;
-               int positionBelowX = offsetX+i;
+               int positionBelowY = PieceToBoardYCoordinate(j)+1;
+               int positionBelowX = PieceToBoardXCoordinate(i);
                // not on the board
                if(positionBelowY < 0)
                    ;
@@ -93,7 +91,6 @@ void Game::ClearAndScore() {
     // find lines to be cleared
     std::vector<int> clearRows;
     auto representation = gameState_.currentPiece.GetRepresentation();
-    int offsetY = gameState_.currentPiece.GetOffsetY();
 
     auto HasNonEmptyRow = [representation](int j) {
         bool hasNonEmpty = false;
@@ -106,7 +103,7 @@ void Game::ClearAndScore() {
     for(unsigned int j=0; j<representation.size(); j++){
         if (!HasNonEmptyRow(j)) 
             continue;
-        int positionY = offsetY+(int)j-(int)representation.size();
+        int positionY = PieceToBoardYCoordinate(j);
         bool full = true;
         for(unsigned int i=0; i<NumColumnsBoard && full; i++){
             full = gameState_.board[positionY][i] != Shape::empty;
@@ -118,6 +115,7 @@ void Game::ClearAndScore() {
     }
     if(!clearRows.empty() && clearRows.back()>0)
         gameState_.board[clearRows.back()+1] = std::vector<Shape>(NumColumnsBoard, Shape::empty);
+
     // score clears
     if(clearRows.size()==1) gameState_.score += 40;
     else if(clearRows.size()==2) gameState_.score += 100;
@@ -128,19 +126,25 @@ void Game::ClearAndScore() {
 
 void Game::AddPieceToBoard() {
     auto representation = gameState_.currentPiece.GetRepresentation();
-    int offsetY = gameState_.currentPiece.GetOffsetY();
-    int offsetX = gameState_.currentPiece.GetOffsetX();
     Shape shape = gameState_.currentPiece.GetShape();
     for(unsigned int j=0; j<representation.size(); j++){
         for(unsigned int i=0; i<representation[j].size(); i++){
-            int positionY = offsetY+(int)j-(int)representation.size();
-            int positionX = offsetX+(int)i;
+            int positionY = PieceToBoardYCoordinate(j);
+            int positionX = PieceToBoardXCoordinate(i);
             // non-empty
             if(representation[j][i] && positionY>0){
                 gameState_.board[positionY][positionX]=shape;
             }
         }
     }
+}
+
+int Game::PieceToBoardYCoordinate(int pieceYCoordinate) {
+    return gameState_.currentPiece.GetOffsetY() + pieceYCoordinate - gameState_.currentPiece.GetRepresentation().size();
+}
+
+int Game::PieceToBoardXCoordinate(int pieceXCoordinate) {
+    return gameState_.currentPiece.GetOffsetX() + pieceXCoordinate;
 }
 
 bool Game::ExecuteTimeStep() {

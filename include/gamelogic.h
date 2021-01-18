@@ -62,6 +62,14 @@ private:
     void AddPieceToBoard();
     void ClearAndScore();
     void CreateRandomGenerator();
+    /*
+    * Converts a y coordinate from the frame of the piece to a y coordinate on the board
+    */
+    int PieceToBoardYCoordinate(int pieceYCoordinate);
+    /*
+    * Converts a x coordinate form the frame of the piece to a x coordinate on the board
+    */
+    int PieceToBoardXCoordinate(int pieceXCoordinate);
 
     GameState gameState_;
     std::vector<IObserver*> observers;
