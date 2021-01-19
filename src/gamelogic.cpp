@@ -189,8 +189,18 @@ void Game::SendGameInput(GameInput input) {
 }
 
 void Game::MoveCurrentPieceLeft() {
-    // find leftmost nonzero
     auto representation = gameState_.currentPiece.GetRepresentation();
+
+    // check if left is free
+    for (int j = 0; j < representation.size(); j++) {
+        int leftYCoordinate = PieceToBoardYCoordinate(j);
+        int leftXCoordinate = PieceToBoardXCoordinate(0)-1;
+        if (leftXCoordinate > 0) {
+            if (gameState_.board[leftYCoordinate][leftXCoordinate] != Shape::empty) return;
+        }
+    }
+
+    // find leftmost nonzero
     int leftMost = representation.size();
     for (int j = 0; j < representation.size(); j++) {
         for (int i = 0; i < representation[j].size(); i++) {
