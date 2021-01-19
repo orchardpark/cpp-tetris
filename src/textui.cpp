@@ -103,8 +103,8 @@ std::string TextUI::StateToString(const GameState &state)
 	for(int j=0; j<representation.size(); j++){
 	    for(int i=0; i<representation[j].size(); i++){
 	        if(representation[j][i]){
-	            int yCoordinate = gamePiece.GetOffsetY()+j-(int)representation.size()+1;
-	            int xCoordinate = gamePiece.GetOffsetX()+i;
+	            int yCoordinate = state.currentPieceOffsetY+j-(int)representation.size();
+	            int xCoordinate = state.currentPieceOffsetX+i;
 	            if(yCoordinate>=0){
 	                boardRepresentation[yCoordinate][xCoordinate] = Shape::iBlock;
 	            }

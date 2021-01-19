@@ -38,7 +38,7 @@ std::vector<std::vector<Occupancy>> GamePiece::GetRepresentation() {
     }
 }
 
-GamePiece::GamePiece(Shape shape, Orientation orientation, int offsetX) : orientation_(orientation), shape_(shape), offsetX_(offsetX),offsetY_(0) {
+GamePiece::GamePiece(Shape shape, Orientation orientation) : orientation_(orientation), shape_(shape) {
 }
 
 std::vector<std::vector<Occupancy>> GamePiece::GetIRepresentation() {
@@ -222,28 +222,8 @@ std::vector<std::vector<Occupancy>> GamePiece::GetZRepresentation() {
     }
 }
 
-void GamePiece::MoveLeft() {
-    if(offsetX_ > 0) offsetX_--;
-}
-
-void GamePiece::MoveRight() {
-    if(offsetX_ < NumColumnsBoard-1-4) offsetX_++;
-}
-
-int GamePiece::GetOffsetY() {
-    return offsetY_;
-}
-
-int GamePiece::GetOffsetX() {
-    return offsetX_;
-}
-
 Shape GamePiece::GetShape() {
     return shape_;
-}
-
-void GamePiece::MoveDown() {
-    offsetY_++;
 }
 
 std::string ShapeToString(Shape shape) {

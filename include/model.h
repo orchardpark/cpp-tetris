@@ -36,44 +36,19 @@ public:
     * Instantiates a new GamePiece
     * @param shape The block shape
     * @param orientation The orientation of the block
-    * @param offsetX Where on the board (horizontally) will the block be spawned
     */
-    GamePiece(Shape shape, Orientation orientation, int offsetX);
+    GamePiece(Shape shape, Orientation orientation);
     /*
     * Rotates the piece 90 degrees clockwise
     */
     void Rotate();
-    /*
-    * Moves the piece to the left
-    */
-    void MoveLeft();
-    /*
-    * Moves the piece to the right
-    */
-    void MoveRight();
-    /*
-    * Moves the piece down
-    */
-    void MoveDown();
-    /*
+	/*
     * Get the representation for this piece
     * The representation will be a boolean matrix
     * where 0 represents empty space and 1 is a block of the piece
     * (0,0) represents the top left corner
     */
     std::vector<std::vector<Occupancy>> GetRepresentation();
-    /*
-    * Gets the vertical offset. If the yOffset is 0, that means that the bottom of the representation
-    * matches up with the top of the board. More precisely, the y-coordinate (in the frame of the board)
-    * of the bottom of the representation (that is, the highest numbered row in the representation).
-    * will be at position -1.
-    */
-    int GetOffsetY();
-    /*
-    * Gets the the horizontal offset
-    * @invariant 0<=result<NumColumns-GetRepresentation().size()
-    */
-    int GetOffsetX();
     /*
     * Returns the block shape
     */
@@ -90,8 +65,6 @@ private:
 
     Shape shape_;
     Orientation orientation_;
-    int offsetX_;
-    int offsetY_;
 };
 
 class GameBoard{
@@ -107,6 +80,18 @@ struct GameState {
     GameState(GameBoard board, GamePiece piece, int score, int level);
     GameBoard board;
     GamePiece currentPiece;
+	/*
+    * Gets the the horizontal offset
+    * @invariant 0<=result<NumColumns-GetRepresentation().size()
+    */
+    int currentPieceOffsetX;
+	/*
+    * Gets the vertical offset. If the yOffset is 0, that means that the bottom of the representation
+    * matches up with the top of the board. More precisely, the y-coordinate (in the frame of the board)
+    * of the bottom of the representation (that is, the highest numbered row in the representation).
+    * will be at position -1.
+    */
+    int currentPieceOffsetY;
     int score;
     int level;
 };

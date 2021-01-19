@@ -70,6 +70,18 @@ private:
     * Converts a x coordinate form the frame of the piece to a x coordinate on the board
     */
     int PieceToBoardXCoordinate(int pieceXCoordinate);
+    /*
+    * Moves the current GamePiece down (if possible)
+    */
+    void MoveCurrentPieceDown();
+    /*
+    * Moves the current GamePiece left (if possible)
+    */
+    void MoveCurrentPieceLeft();
+    /*
+    * Moves the current GamePiece right (if possible)
+    */
+    void MoveCurrentPieceRight();
 
     GameState gameState_;
     std::vector<IObserver*> observers;

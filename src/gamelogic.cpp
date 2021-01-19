@@ -12,6 +12,13 @@ Game::Game(GameState state) : gameState_(std::move(state)){
 }
 
 void Game::Run() {
+    // Initialize first piece
+    gameState_.currentPiece = NextPiece();
+	std::uniform_int_distribution<int> offsetX_distribution(0, NumColumnsBoard-1-gameState_.currentPiece.GetRepresentation().size());
+	gameState_.currentPieceOffsetX = offsetX_distribution(generator);
+	gameState_.currentPieceOffsetY = 0;
+
+    // Run Game Loop
 	while (!IsGameFinished()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1000/gameState_.level));
         ExecuteTimeStep();
@@ -32,11 +39,10 @@ void Game::CreateRandomGenerator() {
 GamePiece Game::NextPiece() {
     std::uniform_int_distribution<int> shape_distribution(1,7);
     std::uniform_int_distribution<int> orientation_distribution(0, 3);
-    std::uniform_int_distribution<int> offsetX_distribution(0, NumColumnsBoard-1-4);
     return GamePiece(
             (Shape)shape_distribution(generator),
-            (Orientation)orientation_distribution(generator),
-            offsetX_distribution(generator));
+            (Orientation)orientation_distribution(generator)
+            );
 }
 
 bool Game::IsGameFinished() {
@@ -140,21 +146,24 @@ void Game::AddPieceToBoard() {
 }
 
 int Game::PieceToBoardYCoordinate(int pieceYCoordinate) {
-    return gameState_.currentPiece.GetOffsetY() + pieceYCoordinate - gameState_.currentPiece.GetRepresentation().size();
+    return gameState_.currentPieceOffsetY + pieceYCoordinate - gameState_.currentPiece.GetRepresentation().size();
 }
 
 int Game::PieceToBoardXCoordinate(int pieceXCoordinate) {
-    return gameState_.currentPiece.GetOffsetX() + pieceXCoordinate;
+    return gameState_.currentPieceOffsetX + pieceXCoordinate;
 }
 
 bool Game::ExecuteTimeStep() {
-    gameState_.currentPiece.MoveDown();
+    MoveCurrentPieceDown();
     bool blocked = IsPieceBlocked();
     if(blocked){
         if(IsGameFinished()) return false;
         AddPieceToBoard();
         ClearAndScore();
         gameState_.currentPiece = NextPiece();
+		std::uniform_int_distribution<int> offsetX_distribution(0, NumColumnsBoard-1-gameState_.currentPiece.GetRepresentation().size());
+        gameState_.currentPieceOffsetX = offsetX_distribution(generator);
+        gameState_.currentPieceOffsetY = 0;
     }
     for (auto observer : observers) {
         observer->Update(gameState_);
@@ -165,16 +174,49 @@ bool Game::ExecuteTimeStep() {
 void Game::SendGameInput(GameInput input) {
 	switch (input) {
 	case GameInput::MOVE_DOWN:
-        gameState_.currentPiece.MoveDown();
+        MoveCurrentPieceDown();
 		break;
     case GameInput::MOVE_LEFT:
-        gameState_.currentPiece.MoveLeft();
+        MoveCurrentPieceLeft();
         break;
     case GameInput::MOVE_RIGHT:
-        gameState_.currentPiece.MoveRight();
+        MoveCurrentPieceRight();
         break;
     case GameInput::ROTATE:
         gameState_.currentPiece.Rotate();
         break;
 	}
+}
+
+void Game::MoveCurrentPieceLeft() {
+    // find leftmost nonzero
+    auto representation = gameState_.currentPiece.GetRepresentation();
+    int leftMost = representation.size();
+    for (int j = 0; j < representation.size(); j++) {
+        for (int i = 0; i < representation[j].size(); i++) {
+            if (representation[j][i]) {
+                if (i < leftMost) leftMost = i;
+            }
+        }
+    }
+    if(gameState_.currentPieceOffsetX-leftMost > 0) gameState_.currentPieceOffsetX--;
+}
+
+void Game::MoveCurrentPieceRight() {
+    // find rightmost nonzero
+    auto representation = gameState_.currentPiece.GetRepresentation();
+    int rightMost = 0;
+    for (int j = 0; j < representation.size(); j++) {
+        for (int i = 0; i < representation[j].size(); i++) {
+            if (representation[j][i]) {
+                if (i > rightMost) rightMost = i;
+            }
+        }
+    }
+    if(gameState_.currentPieceOffsetX+rightMost < NumColumnsBoard-1) gameState_.currentPieceOffsetX++;
+}
+
+void Game::MoveCurrentPieceDown() {
+    if (!IsPieceBlocked())
+        gameState_.currentPieceOffsetY++;
 }
