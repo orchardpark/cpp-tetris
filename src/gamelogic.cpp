@@ -157,24 +157,32 @@ int Game::PieceToBoardXCoordinate(int pieceXCoordinate) {
 }
 
 bool Game::ExecuteTimeStep() {
+    bool gameFinished = false;
+    mutex_.lock();
     MoveCurrentPieceDown();
     bool blocked = IsPieceBlocked();
     if(blocked){
-        if(IsGameFinished()) return false;
-        AddPieceToBoard();
-        ClearAndScore();
-        gameState_.currentPiece = NextPiece();
-		std::uniform_int_distribution<int> offsetX_distribution(0, NumColumnsBoard-1-gameState_.currentPiece.GetRepresentation().size());
-        gameState_.currentPieceOffsetX = offsetX_distribution(generator);
-        gameState_.currentPieceOffsetY = 0;
+        if (IsGameFinished()) {
+            gameFinished = true;
+        }
+        else {
+            AddPieceToBoard();
+            ClearAndScore();
+            gameState_.currentPiece = NextPiece();
+            std::uniform_int_distribution<int> offsetX_distribution(0, NumColumnsBoard - 1 - gameState_.currentPiece.GetRepresentation().size());
+            gameState_.currentPieceOffsetX = offsetX_distribution(generator);
+            gameState_.currentPieceOffsetY = 0;
+        }
     }
     for (auto observer : observers) {
         observer->Update(gameState_);
     }
-    return true;
+    mutex_.unlock();
+    return !gameFinished;
 }
 
 void Game::SendGameInput(GameInput input) {
+    mutex_.lock();
 	switch (input) {
 	case GameInput::MOVE_DOWN:
         MoveCurrentPieceDown();
@@ -189,6 +197,7 @@ void Game::SendGameInput(GameInput input) {
         RotateCurrentPiece();
         break;
 	}
+    mutex_.unlock();
 }
 
 void Game::MoveCurrentPieceLeft() {
@@ -270,8 +279,8 @@ void Game::MoveCurrentPieceDown() {
 }
 
 void Game::RotateCurrentPiece() {
-    auto representation = gameState_.currentPiece.GetRepresentation();
     gameState_.currentPiece.Rotate();
+    auto representation = gameState_.currentPiece.GetRepresentation();
     bool isPossible = true;
     for (int j = 0; j < representation.size() && isPossible; j++) {
         for (int i = 0; i < representation[j].size() && isPossible; i++) {
@@ -279,9 +288,9 @@ void Game::RotateCurrentPiece() {
                 int x = PieceToBoardXCoordinate(i);
                 int y = PieceToBoardYCoordinate(j);
                 // outside bounds
-                if (x < 0 || x >= representation[j].size() || y < 0 || y >= representation.size()) isPossible = false;
+                if (x < 0 || x >= NumColumnsBoard || y < 0 || y >= NumRowsBoard) isPossible = false;
                 // already occupied
-                if (gameState_.board[y][x] != Shape::empty) isPossible = false;
+                else if (gameState_.board[y][x] != Shape::empty) isPossible = false;
             }
         }
     }

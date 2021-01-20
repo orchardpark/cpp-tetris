@@ -12,6 +12,7 @@
 #include <chrono>
 #include <thread>
 #include <utility>
+#include <mutex>
 
 enum class GameInput {
     MOVE_DOWN,
@@ -89,5 +90,6 @@ private:
 
     GameState gameState_;
     std::vector<IObserver*> observers;
+    std::mutex mutex_;
 };
 #endif //CPP_TETRIS_GAMELOGIC_H
