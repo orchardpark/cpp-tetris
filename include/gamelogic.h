@@ -82,6 +82,10 @@ private:
     * Moves the current GamePiece right (if possible)
     */
     void MoveCurrentPieceRight();
+    /*
+    * Rotates the current GamePiece (if possible)
+    */
+    void RotateCurrentPiece();
 
     GameState gameState_;
     std::vector<IObserver*> observers;

@@ -186,7 +186,7 @@ void Game::SendGameInput(GameInput input) {
         MoveCurrentPieceRight();
         break;
     case GameInput::ROTATE:
-        gameState_.currentPiece.Rotate();
+        RotateCurrentPiece();
         break;
 	}
 }
@@ -197,13 +197,15 @@ void Game::MoveCurrentPieceLeft() {
     // check if left is free
     for (int j = 0; j < representation.size(); j++) {
         int leftYCoordinate = PieceToBoardYCoordinate(j);
-        for (int i = 0; i < representation[j].size(); i++) {
-            if (representation[j][i]) {
-				int leftXCoordinate = PieceToBoardXCoordinate(i) - 1;
-				if (leftXCoordinate > 0) {
-					if (gameState_.board[leftYCoordinate][leftXCoordinate] != Shape::empty) return;
-				}
-				break;
+        if (leftYCoordinate >= 0) {
+            for (int i = 0; i < representation[j].size(); i++) {
+                if (representation[j][i]) {
+                    int leftXCoordinate = PieceToBoardXCoordinate(i) - 1;
+                    if (leftXCoordinate > 0) {
+                        if (gameState_.board[leftYCoordinate][leftXCoordinate] != Shape::empty) return;
+                    }
+                    break;
+                }
             }
         }
     }
@@ -230,11 +232,13 @@ void Game::MoveCurrentPieceRight() {
     // check if right is free
     for (int j = 0; j < representation.size(); j++) {
         int rightYCoordinate = PieceToBoardYCoordinate(j);
-        for (int i = representation.size() - 1; i >= 0; i--) {
-            if (representation[j][i]) {
-                int rightXCoordinate = PieceToBoardXCoordinate(i) + 1;
-                if (rightXCoordinate < representation.size()) {
-                    if (gameState_.board[rightYCoordinate][rightXCoordinate] != Shape::empty) return;
+        if (rightYCoordinate >= 0) {
+            for (int i = representation.size() - 1; i >= 0; i--) {
+                if (representation[j][i]) {
+                    int rightXCoordinate = PieceToBoardXCoordinate(i) + 1;
+                    if (rightXCoordinate < representation.size()) {
+                        if (gameState_.board[rightYCoordinate][rightXCoordinate] != Shape::empty) return;
+                    }
                 }
             }
         }
@@ -263,4 +267,34 @@ void Game::MoveCurrentPieceDown() {
 			observer->Update(gameState_);
 		}
 	}
+}
+
+void Game::RotateCurrentPiece() {
+    auto representation = gameState_.currentPiece.GetRepresentation();
+    gameState_.currentPiece.Rotate();
+    bool isPossible = true;
+    for (int j = 0; j < representation.size() && isPossible; j++) {
+        for (int i = 0; i < representation[j].size() && isPossible; i++) {
+            if (representation[j][i]) {
+                int x = PieceToBoardXCoordinate(i);
+                int y = PieceToBoardYCoordinate(j);
+                // outside bounds
+                if (x < 0 || x >= representation[j].size() || y < 0 || y >= representation.size()) isPossible = false;
+                // already occupied
+                if (gameState_.board[y][x] != Shape::empty) isPossible = false;
+            }
+        }
+    }
+
+    if (isPossible) {
+        for (auto observer : observers) {
+            observer->Update(gameState_);
+        }
+    }
+    else {
+        // Rotate back to original position
+        for (int i = 0; i < 3; i++)
+            gameState_.currentPiece.Rotate();
+    }
+    
 }
