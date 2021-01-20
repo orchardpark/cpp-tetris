@@ -194,9 +194,14 @@ void Game::MoveCurrentPieceLeft() {
     // check if left is free
     for (int j = 0; j < representation.size(); j++) {
         int leftYCoordinate = PieceToBoardYCoordinate(j);
-        int leftXCoordinate = PieceToBoardXCoordinate(0)-1;
-        if (leftXCoordinate > 0) {
-            if (gameState_.board[leftYCoordinate][leftXCoordinate] != Shape::empty) return;
+        for (int i = 0; i < representation[j].size(); i++) {
+            if (representation[j][i]) {
+				int leftXCoordinate = PieceToBoardXCoordinate(i) - 1;
+				if (leftXCoordinate > 0) {
+					if (gameState_.board[leftYCoordinate][leftXCoordinate] != Shape::empty) return;
+				}
+				break;
+            }
         }
     }
 
@@ -213,8 +218,20 @@ void Game::MoveCurrentPieceLeft() {
 }
 
 void Game::MoveCurrentPieceRight() {
-    // find rightmost nonzero
     auto representation = gameState_.currentPiece.GetRepresentation();
+    // check if right is free
+    for (int j = 0; j < representation.size(); j++) {
+        int rightYCoordinate = PieceToBoardYCoordinate(j);
+        for (int i = representation.size() - 1; i >= 0; i--) {
+            if (representation[j][i]) {
+                int rightXCoordinate = PieceToBoardXCoordinate(i) + 1;
+                if (rightXCoordinate >= representation.size()) {
+                    if (gameState_.board[rightYCoordinate][rightXCoordinate] != Shape::empty) return;
+                }
+            }
+        }
+    }
+    // find rightmost nonzero
     int rightMost = 0;
     for (int j = 0; j < representation.size(); j++) {
         for (int i = 0; i < representation[j].size(); i++) {
