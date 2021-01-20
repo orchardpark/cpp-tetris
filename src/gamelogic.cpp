@@ -225,7 +225,7 @@ void Game::MoveCurrentPieceRight() {
         for (int i = representation.size() - 1; i >= 0; i--) {
             if (representation[j][i]) {
                 int rightXCoordinate = PieceToBoardXCoordinate(i) + 1;
-                if (rightXCoordinate >= representation.size()) {
+                if (rightXCoordinate < representation.size()) {
                     if (gameState_.board[rightYCoordinate][rightXCoordinate] != Shape::empty) return;
                 }
             }
