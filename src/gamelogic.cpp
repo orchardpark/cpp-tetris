@@ -214,7 +214,7 @@ void Game::MoveCurrentPieceLeft() {
             }
         }
     }
-    if(gameState_.currentPieceOffsetX-leftMost > 0) gameState_.currentPieceOffsetX--;
+    if(gameState_.currentPieceOffsetX+leftMost > 0) gameState_.currentPieceOffsetX--;
 }
 
 void Game::MoveCurrentPieceRight() {
