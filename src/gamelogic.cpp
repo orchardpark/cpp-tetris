@@ -3,22 +3,27 @@ std::random_device device;
 std::mt19937 generator(device());
 
 
-Game::Game() : gameState_(GameState(GameBoard(), NextPiece(), 0, 1)){
-    CreateRandomGenerator();
+Game::Game() : gameState_(
+    GameState(
+        GameBoard(), 
+        NextPiece(), 
+        0, 
+        1, 
+		[]() {
+			std::uniform_int_distribution<int> offsetX_distribution(0, NumColumnsBoard - 1 - 4);
+			return offsetX_distribution(generator);
+		}()
+			))
+{
 }
 
 Game::Game(GameState state) : gameState_(std::move(state)){
-    CreateRandomGenerator();
 }
 
 void Game::Run() {
     // Initialize first piece
     gameState_.currentPiece = NextPiece();
-	std::uniform_int_distribution<int> offsetX_distribution(0, NumColumnsBoard-1-gameState_.currentPiece.GetRepresentation().size());
-	gameState_.currentPieceOffsetX = offsetX_distribution(generator);
-	gameState_.currentPieceOffsetY = 0;
-
-    // Run Game Loop
+	// Run Game Loop
 	while (!IsGameFinished()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1000/gameState_.level));
         ExecuteTimeStep();
@@ -33,8 +38,6 @@ void Game::Detach(IObserver* observer) {
     //@TODO
 }
 
-void Game::CreateRandomGenerator() {
-}
 
 GamePiece Game::NextPiece() {
     std::uniform_int_distribution<int> shape_distribution(1,7);
@@ -214,7 +217,12 @@ void Game::MoveCurrentPieceLeft() {
             }
         }
     }
-    if(gameState_.currentPieceOffsetX+leftMost > 0) gameState_.currentPieceOffsetX--;
+    if (gameState_.currentPieceOffsetX + leftMost > 0) {
+        gameState_.currentPieceOffsetX--;
+		for (auto observer : observers) {
+			observer->Update(gameState_);
+		}
+	}
 }
 
 void Game::MoveCurrentPieceRight() {
@@ -240,10 +248,19 @@ void Game::MoveCurrentPieceRight() {
             }
         }
     }
-    if(gameState_.currentPieceOffsetX+rightMost < NumColumnsBoard-1) gameState_.currentPieceOffsetX++;
+    if (gameState_.currentPieceOffsetX + rightMost < NumColumnsBoard - 1) {
+		gameState_.currentPieceOffsetX++;
+		for (auto observer : observers) {
+			observer->Update(gameState_);
+		}
+	}
 }
 
 void Game::MoveCurrentPieceDown() {
-    if (!IsPieceBlocked())
-        gameState_.currentPieceOffsetY++;
+    if (!IsPieceBlocked()) {
+		gameState_.currentPieceOffsetY++;
+		for (auto observer : observers) {
+			observer->Update(gameState_);
+		}
+	}
 }
