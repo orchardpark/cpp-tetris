@@ -1,5 +1,5 @@
 set(TSTBINARY ${CMAKE_PROJECT_NAME}_tst)
-set(TEST_SOURCES gamelogictest.cpp)
+set(TEST_SOURCES "gametest.cpp")
 add_executable(${TSTBINARY} ${TEST_SOURCES})
 add_test(NAME ${TSTBINARY} COMMAND ${TSTBINARY})
 target_link_libraries(${TSTBINARY} PUBLIC ${CMAKE_PROJECT_NAME}_lib gtest)

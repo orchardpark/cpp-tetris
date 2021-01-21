@@ -1,4 +1,4 @@
-#include "../include/gamelogic.h"
+#include "../include/game.h"
 std::random_device device;
 std::mt19937 generator(device());
 
@@ -273,6 +273,7 @@ void Game::MoveCurrentPieceRight() {
 			observer->Update(gameState_);
 		}
 	}
+    
 }
 
 void Game::MoveCurrentPieceDown() {
@@ -313,3 +314,4 @@ void Game::RotateCurrentPiece() {
     }
     
 }
+

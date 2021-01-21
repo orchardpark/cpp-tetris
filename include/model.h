@@ -76,6 +76,7 @@ public:
 private:
     std::vector<std::vector<Shape>> representation_;
 };
+
 struct GameState {
     GameState(GameBoard board, GamePiece piece, int score, int level, int offsetX);
     GameBoard board;

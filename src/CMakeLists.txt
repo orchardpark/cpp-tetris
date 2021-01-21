@@ -1,5 +1,5 @@
 set(BINARY ${CMAKE_PROJECT_NAME})
-set(SOURCES main.cpp ../include/model.h model.cpp gamelogic.cpp ../include/gamelogic.h "textui.cpp")
+set(SOURCES main.cpp ../include/model.h model.cpp "game.cpp" "../include/game.h" "textui.cpp")
 if(WIN32)
     set(SDL2_DIR ../lib/SDL2-2.0.14)
     find_package(SDL2 REQUIRED)

@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include "../include/gamelogic.h"
+#include "../include/game.h"
 
 
 int main(int argc, char** argv) {

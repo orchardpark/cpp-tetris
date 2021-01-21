@@ -2,7 +2,7 @@
 #define CPP_TETRIS_TEXTUI_H
 #include "observer.h"
 #include <thread>
-#include "gamelogic.h"
+#include "game.h"
 #include <iostream>
 #include <memory>
 #ifdef __GNUC__
