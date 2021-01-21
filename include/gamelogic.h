@@ -1,7 +1,3 @@
-/**
- * @file gamelogic.cc
- * @brief Models game state and logic
- */
 #ifndef CPP_TETRIS_GAMELOGIC_H
 #define CPP_TETRIS_GAMELOGIC_H
 
@@ -23,39 +19,48 @@ enum class GameInput {
 
 class Game : public ISubject{
 public:
-    /**
-    * Creates a new game instance
-    */
+
+    /// <summary>
+    /// Creates a new game instance
+    /// </summary>
+    /// <returns>New game instance</returns>
     Game();
-    /*
-    * Creates a new game from specified game state
-    */
+    
+	/// <summary>
+    /// Creates a new game from specified game state
+    /// </summary>
+    /// <param name="state">State used to initialize the game</param>
+    /// <returns></returns>
     Game(GameState state);
-    /*
-    * Run the game
-    */
+    
+	/// <summary>
+    /// Run the game
+    /// </summary>
     void Run();
-    /*
-    * Attach observer to the game
-    * @param observer Observer object (e.g. a GUI) that observes changes to the game
-    */
+    
+    /// <summary>
+    /// Attach observer to the game 
+    /// </summary>
+    /// <param name="observer">Observer object (e.g. a GUI) that observes changes to the game</param>
     void Attach(IObserver* observer);
-    /*
-    * Detach observer from the game
-    */
+    
+	/// <summary>
+    /// Detach observer from the game
+    /// </summary>
+    /// <param name="observer">Observer to detach</param>
     void Detach(IObserver* observer);
 
-    /*
-    * Send keyboard input to game
-    * @param input (move down, left, right, rotate)
-    */
+    /// <summary>
+    /// Send keyboard input to game
+    /// </summary>
+    /// <param name="input">input (move down, left, right, rotate)</param>
     void SendGameInput(GameInput input);
         
 private:
-	/**
-     * Executes one time step (moving current piece down 1)
-     * @return true if succeeded and false if game is finished
-     */
+    /// <summary>
+    /// Executes one time step (moving current piece down 1)
+    /// </summary>
+    /// <returns>true if succeeded and false if game is finished</returns>
     bool ExecuteTimeStep();
 	bool IsGameFinished();
     GamePiece NextPiece();
@@ -63,29 +68,39 @@ private:
     void AddPieceToBoard();
     void ClearAndScore();
     void CreateRandomGenerator();
-    /*
-    * Converts a y coordinate from the frame of the piece to a y coordinate on the board
-    */
+    
+    /// <summary>
+    /// Converts a y coordinate from the frame of the piece to a y coordinate on the board
+    /// </summary>
+    /// <param name="pieceYCoordinate">The y coordinate of the current piece</param>
+    /// <returns>Y coordinate in board reference frame</returns>
     int PieceToBoardYCoordinate(int pieceYCoordinate);
-    /*
-    * Converts a x coordinate form the frame of the piece to a x coordinate on the board
-    */
+
+    /// <summary>
+    ///Converts a x coordinate form the frame of the piece to a x coordinate on the board
+    /// </summary>
+    /// <param name="pieceXCoordinate"></param>
+    /// <returns></returns>
     int PieceToBoardXCoordinate(int pieceXCoordinate);
-    /*
-    * Moves the current GamePiece down (if possible)
-    */
+
+    /// <summary>
+    /// Moves the current GamePiece down (if possible)
+    /// </summary>
     void MoveCurrentPieceDown();
-    /*
-    * Moves the current GamePiece left (if possible)
-    */
+
+    /// <summary>
+    /// Moves the current GamePiece left (if possible)
+    /// </summary>
     void MoveCurrentPieceLeft();
-    /*
-    * Moves the current GamePiece right (if possible)
-    */
+
+    /// <summary>
+    /// Moves the current GamePiece right (if possible)
+    /// </summary>
     void MoveCurrentPieceRight();
-    /*
-    * Rotates the current GamePiece (if possible)
-    */
+
+    /// <summary>
+    /// Rotates the current GamePiece (if possible)
+    /// </summary>
     void RotateCurrentPiece();
 
     GameState gameState_;

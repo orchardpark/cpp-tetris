@@ -1,5 +1,6 @@
 #include "../include/textui.h"
 
+
 bool quit = false;
 
 void StartGame(std::shared_ptr<Game> game)
@@ -38,7 +39,6 @@ void Initialize_SDL() {
 		exit(1);
 	}
 }
-
 void RunKeyboardController(std::shared_ptr<Game> game)
 {
 	Initialize_SDL();
