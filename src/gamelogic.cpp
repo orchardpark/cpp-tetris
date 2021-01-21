@@ -97,7 +97,7 @@ bool Game::IsPieceBlocked() {
 }
 
 void Game::ClearAndScore() {
-    // find lines to be cleared
+
     std::vector<int> clearRows;
     auto representation = gameState_.currentPiece.GetRepresentation();
 
@@ -109,6 +109,7 @@ void Game::ClearAndScore() {
         return hasNonEmpty;
     };
 
+    // Find the rows to clear
     for(unsigned int j=0; j<representation.size(); j++){
         if (!HasNonEmptyRow(j)) 
             continue;
@@ -119,17 +120,22 @@ void Game::ClearAndScore() {
         }
         if(full) clearRows.push_back(positionY);
     }
-    for(int row : clearRows){
-        gameState_.board[row] = std::move(gameState_.board[row+1]);
-    }
-    if(!clearRows.empty() && clearRows.back()>0)
-        gameState_.board[clearRows.back()+1] = std::vector<Shape>(NumColumnsBoard, Shape::empty);
 
+    // Clear rows one by one starting from the top
+    for (int i = 0; i < clearRows.size(); i++) {
+        int row = clearRows[i];
+        for (int j = row-1; j >=0; j--) {
+            gameState_.board[j + 1] = std::move(gameState_.board[j]);
+        }
+        gameState_.board[0] = std::vector<Shape>(NumColumnsBoard, Shape::empty);
+    }
+    
     // score clears
-    if(clearRows.size()==1) gameState_.score += 40;
-    else if(clearRows.size()==2) gameState_.score += 100;
-    else if(clearRows.size()==3) gameState_.score += 300;
-    else if(clearRows.size()==4) gameState_.score += 1200;
+    int numClearedRows = clearRows.size();
+    if(numClearedRows==1) gameState_.score += 40;
+    else if(numClearedRows==2) gameState_.score += 100;
+    else if(numClearedRows==3) gameState_.score += 300;
+    else if(numClearedRows==4) gameState_.score += 1200;
 
 }
 
