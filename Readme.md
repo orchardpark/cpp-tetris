@@ -2,12 +2,16 @@
 
 C++ implementation of the Tetris game.
 
-## Installation
+## Compilation & Installation
+
+Only tested on Ubuntu Linux. Windows is *not* supported.
 
 Requirements:
+
 - [CMake](https://cmake.org/) 3.16 or higher.
 - [SDL2](https://www.libsdl.org/download-2.0.php)
-  * Linux: Install `libsdl2-dev`
+  * Install `libsdl2-dev`
+  * Install `libsdl2-ttf-dev`
 - [GTest](https://github.com/google/googletest) 
   * Install it by cloning the repo and copying its contents to `/lib/googletest`
 

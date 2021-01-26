@@ -62,7 +62,7 @@ void Initialize_SDL() {
 
 	//Now since it's a texture, you have to put RenderCopy in your game loop area, the area where the whole code executes
 
-	SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+	SDL_RenderCopy(gRenderer, Message, NULL, &Message_rect);
 }
 void RunKeyboardController(std::shared_ptr<Game> game)
 {
