@@ -78,23 +78,26 @@ private:
 };
 
 struct GameState {
-    GameState(GameBoard board, GamePiece piece, int score, int level, int offsetX);
+    GameState(GameBoard board, GamePiece piece, int score, int level, int offsetX, bool isFinished);
     GameBoard board;
     GamePiece currentPiece;
-	/*
-    * Gets the the horizontal offset
-    * @invariant 0<=result<NumColumns-GetRepresentation().size()
-    */
+
+    /// <summary>
+    /// Gets the the horizontal offset
+    /// @invariant 0<=result<NumColumns-GetRepresentation().size()
+    /// </summary>
     int currentPieceOffsetX;
-	/*
-    * Gets the vertical offset. If the yOffset is 0, that means that the bottom of the representation
-    * matches up with the top of the board. More precisely, the y-coordinate (in the frame of the board)
-    * of the bottom of the representation (that is, the highest numbered row in the representation).
-    * will be at position -1.
-    */
+    
+    /// <summary>
+    /// Gets the vertical offset. If the yOffset is 0, that means that the bottom of the representation
+    /// matches up with the top of the board. More precisely, the y-coordinate (in the frame of the board)
+    /// of the bottom of the representation (that is, the highest numbered row in the representation).
+    /// will be at position -1.
+    /// </summary>
     int currentPieceOffsetY;
     int score;
     int level;
+    bool isFinished;
 };
 
 

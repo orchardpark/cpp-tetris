@@ -55,7 +55,13 @@ public:
     /// </summary>
     /// <param name="input">input (move down, left, right, rotate)</param>
     void SendGameInput(GameInput input);
-        
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns>True if game is finished</returns>
+	bool IsFinished();
+
 private:
     /// <summary>
     /// Executes one time step (moving current piece down 1)

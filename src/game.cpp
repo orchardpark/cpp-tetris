@@ -12,7 +12,8 @@ Game::Game() : gameState_(
 		[]() {
 			std::uniform_int_distribution<int> offsetX_distribution(0, NumColumnsBoard - 1 - 4);
 			return offsetX_distribution(generator);
-		}()
+		}(),
+        false
 			))
 {
 }
@@ -28,6 +29,7 @@ void Game::Run() {
         std::this_thread::sleep_for(std::chrono::milliseconds(1000/gameState_.level));
         ExecuteTimeStep();
 	}
+    gameState_.isFinished = true;
 }
 
 void Game::Attach(IObserver* observer) {
@@ -38,6 +40,9 @@ void Game::Detach(IObserver* observer) {
     //@TODO
 }
 
+bool Game::IsFinished() {
+    return gameState_.isFinished;
+}
 
 GamePiece Game::NextPiece() {
     std::uniform_int_distribution<int> shape_distribution(1,7);

@@ -7,8 +7,10 @@
 #include <memory>
 #ifdef __GNUC__
 #include <SDL2/SDL.h>
+#include <SDL_ttf.h>
 #else
 #include "SDL.h"
+#include "SDL_tff.h"
 #endif
 
 class TextUI : IObserver {

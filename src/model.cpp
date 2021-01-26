@@ -265,5 +265,6 @@ std::vector<Shape>& GameBoard::operator[](int i) {
     return representation_[i];
 }
 
-GameState::GameState(GameBoard board, GamePiece piece, int score, int level, int offsetX) : board(board), currentPiece(piece), score(score), level(level), currentPieceOffsetY(0), currentPieceOffsetX(offsetX) {
+GameState::GameState(GameBoard board, GamePiece piece, int score, int level, int offsetX, bool isFinished) :
+    board(board), currentPiece(piece), score(score), level(level), currentPieceOffsetY(0), currentPieceOffsetX(offsetX), isFinished(isFinished) {
 }

@@ -1,12 +1,11 @@
 #include "../include/textui.h"
 
-
-bool quit = false;
+//The window renderer
+SDL_Renderer* gRenderer = NULL;
 
 void StartGame(std::shared_ptr<Game> game)
 {
 	game->Run();
-	quit = true;
 }
 
 /*
@@ -18,32 +17,58 @@ void Initialize_SDL() {
 		exit(-1);
 	}
 
-	SDL_Window* window = NULL;
+	SDL_Window* gWindow = NULL;
 	SDL_Surface* screenSurface = NULL;
 	int SCREEN_WIDTH = 1024;
 	int SCREEN_HEIGHT = 786;
 
-	window = SDL_CreateWindow("Sphere Rendering",
+	gWindow = SDL_CreateWindow("Sphere Rendering",
 		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
 		SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	if (window == NULL) {
+	if (gWindow == NULL) {
 		fprintf(stderr, "Window could not be created: %s\n", SDL_GetError());
 		exit(1);
 	}
 
-	screenSurface = SDL_GetWindowSurface(window);
+	screenSurface = SDL_GetWindowSurface(gWindow);
 
 	if (!screenSurface) {
 		fprintf(stderr, "Screen surface could not be created: %s\n", SDL_GetError());
 		SDL_Quit();
 		exit(1);
 	}
+
+	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+	if (gRenderer == NULL)
+	{
+		printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
+	}
+
+	TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24); //this opens a font style and sets a size
+
+	SDL_Color White = { 255, 255, 255 };  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
+
+	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "put your text here", White); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
+
+	SDL_Texture* Message = SDL_CreateTextureFromSurface(gRenderer, surfaceMessage); //now you can convert it into a texture
+
+	SDL_Rect Message_rect; //create a rect
+	Message_rect.x = 0;  //controls the rect's x coordinate 
+	Message_rect.y = 0; // controls the rect's y coordinte
+	Message_rect.w = 100; // controls the width of the rect
+	Message_rect.h = 100; // controls the height of the rect
+
+	//Mind you that (0,0) is on the top left of the window/screen, think a rect as the text's box, that way it would be very simple to understand
+
+	//Now since it's a texture, you have to put RenderCopy in your game loop area, the area where the whole code executes
+
+	SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
 }
 void RunKeyboardController(std::shared_ptr<Game> game)
 {
 	Initialize_SDL();
 
-	while (!quit) {
+	while (!game->IsFinished()) {
 		SDL_Event event;
 		/* Poll for events. SDL_PollEvent() returns 0 when there are no  */
 		/* more events on the event queue, our while loop will exit when */
