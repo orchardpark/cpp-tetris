@@ -1,16 +1,8 @@
 set(BINARY ${CMAKE_PROJECT_NAME})
 set(SOURCES main.cpp ../include/model.h model.cpp "game.cpp" "../include/game.h" "textui.cpp")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-if(WIN32)
-    set(SDL2_DIR ../lib/SDL2-2.0.14)
-    find_package(SDL2 REQUIRED)
-    include_directories(${SDL2_INCLUDE_DIRS})
-    file(COPY ${SDL2_DIR}/lib/x64/SDL2.dll
-     DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
-endif(WIN32)
-
-find_file(SDL2_INCLUDE_DIR NAME SDL.h HINTS SDL2)
-find_library(SDL2_LIBRARY NAME SDL2)
+find_package(SDL2 REQUIRED)
+include_directories(${SDL2_INCLUDE_DIRS})
 find_package(SDL2TFF REQUIRED)
 add_executable(${BINARY}_run ${SOURCES})
 add_library(${BINARY}_lib STATIC ${SOURCES})
