@@ -1,5 +1,5 @@
 set(BINARY ${CMAKE_PROJECT_NAME})
-set(SOURCES main.cpp ../include/model.h model.cpp "game.cpp" "../include/game.h" "textui.cpp")
+set(SOURCES main.cpp ../include/model.h model.cpp "game.cpp" "../include/game.h" "gui.cpp")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 find_package(SDL2 REQUIRED)
 find_package(SDL2TTF REQUIRED)
