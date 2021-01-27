@@ -1,6 +1,6 @@
 #include "../include/gui.h"
 
-//The window renderer
+SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 
 void StartGame(std::shared_ptr<Game> game)
@@ -8,17 +8,15 @@ void StartGame(std::shared_ptr<Game> game)
 	game->Run();
 }
 
-/*
-* Sets up the screen
-*/
 void Initialize_SDL() {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
 		fprintf(stderr, "Could not initialise SDL: %s\n", SDL_GetError());
 		exit(-1);
 	}
-
-	SDL_Window* gWindow = NULL;
-	SDL_Surface* screenSurface = NULL;
+	if(TTF_Init() < 0){
+	    fprintf(stderr, "Could not initialize TTF: %s\n", TTF_GetError());
+	    exit(-1);
+	}
 	int SCREEN_WIDTH = 1024;
 	int SCREEN_HEIGHT = 786;
 
@@ -30,43 +28,41 @@ void Initialize_SDL() {
 		exit(1);
 	}
 
-	screenSurface = SDL_GetWindowSurface(gWindow);
-
-	if (!screenSurface) {
-		fprintf(stderr, "Screen surface could not be created: %s\n", SDL_GetError());
-		SDL_Quit();
-		exit(1);
-	}
-
 	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
 	if (gRenderer == NULL)
 	{
 		printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
 	}
-
-	TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24); //this opens a font style and sets a size
-
-	SDL_Color White = { 255, 255, 255 };  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
-
-	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "put your text here", White); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
-
-	SDL_Texture* Message = SDL_CreateTextureFromSurface(gRenderer, surfaceMessage); //now you can convert it into a texture
-
-	SDL_Rect Message_rect; //create a rect
-	Message_rect.x = 0;  //controls the rect's x coordinate 
-	Message_rect.y = 0; // controls the rect's y coordinte
-	Message_rect.w = 100; // controls the width of the rect
-	Message_rect.h = 100; // controls the height of the rect
-
-	//Mind you that (0,0) is on the top left of the window/screen, think a rect as the text's box, that way it would be very simple to understand
-
-	//Now since it's a texture, you have to put RenderCopy in your game loop area, the area where the whole code executes
-
-	SDL_RenderCopy(gRenderer, Message, NULL, &Message_rect);
 }
+
+void get_text_and_rect(SDL_Renderer *renderer, int x, int y, const char *text,
+                       TTF_Font *font, SDL_Texture **texture, SDL_Rect *rect) {
+    int text_width;
+    int text_height;
+    SDL_Surface *surface;
+    SDL_Color textColor = {255, 255, 0, 0};
+
+    surface = TTF_RenderText_Solid(font, text, textColor);
+    *texture = SDL_CreateTextureFromSurface(renderer, surface);
+    text_width = surface->w;
+    text_height = surface->h;
+    SDL_FreeSurface(surface);
+    rect->x = x;
+    rect->y = y;
+    rect->w = text_width;
+    rect->h = text_height;
+
+}
+
+void DeInitialize_SDL(){
+    TTF_Quit();
+    SDL_DestroyRenderer(gRenderer);
+    SDL_DestroyWindow(gWindow);
+    SDL_Quit();
+}
+
 void RunKeyboardController(std::shared_ptr<Game> game)
 {
-
 	while (!game->IsFinished()) {
 		SDL_Event event;
 		/* Poll for events. SDL_PollEvent() returns 0 when there are no  */
@@ -100,12 +96,33 @@ void RunKeyboardController(std::shared_ptr<Game> game)
 void GUI::Run()
 {
     Initialize_SDL();
+    TTF_Font *font = TTF_OpenFont("fonts/FreeSans.ttf", 120);
+    if(!font) {
+        printf("TTF_OpenFont: %s\n", TTF_GetError());
+        // handle error
+    }
+    SDL_Texture *texture1, *texture2;
+    SDL_Rect rect1, rect2;
+    std::string text = "hello world";
+    get_text_and_rect(gRenderer, 0, 0,text.c_str(),font,&texture1, &rect1);
+
+    SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+    SDL_RenderClear(gRenderer);
+
+    /* Use TTF textures. */
+    SDL_RenderCopy(gRenderer, texture1, NULL, &rect1);
+    SDL_RenderCopy(gRenderer, texture2, NULL, &rect2);
+
+    SDL_RenderPresent(gRenderer);
+
     auto g = std::make_shared<Game>();
 	g->Attach(this);
 	std::thread gameThread (StartGame, g);
 	std::thread controllerThread(RunKeyboardController, g);
 	gameThread.join();
 	controllerThread.join();
+
+	DeInitialize_SDL();
 }
 
 void GUI::Update(const GameState& state)

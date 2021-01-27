@@ -32,11 +32,9 @@ const int NumColumnsBoard=10;
 
 class GamePiece{
 public:
-    /*
-    * Instantiates a new GamePiece
-    * @param shape The block shape
-    * @param orientation The orientation of the block
-    */
+    /// Instantiates a new GamePiece
+    /// \param shape The block shape
+    /// \param orientation The orientation of the block
     GamePiece(Shape shape, Orientation orientation);
     /*
     * Rotates the piece 90 degrees clockwise
