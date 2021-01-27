@@ -14,6 +14,9 @@ public:
 	void Update(const GameState& state);
 private:
     std::string StateToString(const GameState& state);
+    void RenderState(const GameState& state);
+    void InitializeSDL2();
+    void DeInitializeSDL2();
 };
 
 #endif // !CPP_TETRIS_GUI_H

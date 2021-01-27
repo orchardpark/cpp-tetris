@@ -96,7 +96,7 @@ void RunKeyboardController(std::shared_ptr<Game> game)
 void GUI::Run()
 {
     Initialize_SDL();
-    TTF_Font *font = TTF_OpenFont("fonts/FreeSans.ttf", 120);
+    TTF_Font *font = TTF_OpenFont("../fonts/FreeSans.ttf", 120);
     if(!font) {
         printf("TTF_OpenFont: %s\n", TTF_GetError());
         // handle error
@@ -162,5 +162,17 @@ std::string GUI::StateToString(const GameState &state)
 
 
 	return title + scoreString + levelString + boardString;
+}
+
+void GUI::RenderState(const GameState &state) {
+
+}
+
+void GUI::InitializeSDL2() {
+
+}
+
+void GUI::DeInitializeSDL2() {
+
 }
 

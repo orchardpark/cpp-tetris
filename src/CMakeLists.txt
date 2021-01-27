@@ -6,5 +6,7 @@ find_package(SDL2TTF REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR})
 add_executable(${BINARY}_run ${SOURCES})
 add_library(${BINARY}_lib STATIC ${SOURCES})
+
+# sdl2 include & libs
 target_include_directories(${BINARY}_run PUBLIC ${SDL2_INCLUDE_DIRS} ${SDL2TTF_INCLUDE_DIR})
 target_link_libraries(${BINARY}_run ${SDL2_LIBRARIES} ${SDL2TTF_LIBRARY})
