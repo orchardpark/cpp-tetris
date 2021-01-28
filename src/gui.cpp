@@ -1,67 +1,35 @@
 #include "../include/gui.h"
 
-SDL_Window* gWindow = NULL;
-SDL_Renderer* gRenderer = NULL;
-
-void StartGame(std::shared_ptr<Game> game)
+void GUI::StartGame(std::shared_ptr<Game> game)
 {
 	game->Run();
 }
 
-void Initialize_SDL() {
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		fprintf(stderr, "Could not initialise SDL: %s\n", SDL_GetError());
-		exit(-1);
-	}
-	if(TTF_Init() < 0){
-	    fprintf(stderr, "Could not initialize TTF: %s\n", TTF_GetError());
-	    exit(-1);
-	}
-	int SCREEN_WIDTH = 1024;
-	int SCREEN_HEIGHT = 786;
-
-	gWindow = SDL_CreateWindow("CPP Tetris",
-		SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-		SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
-	if (gWindow == NULL) {
-		fprintf(stderr, "Window could not be created: %s\n", SDL_GetError());
-		exit(1);
-	}
-
-	gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
-	if (gRenderer == NULL)
-	{
-		printf("Renderer could not be created! SDL Error: %s\n", SDL_GetError());
-	}
-}
-
-void get_text_and_rect(SDL_Renderer *renderer, int x, int y, const char *text,
-                       TTF_Font *font, SDL_Texture **texture, SDL_Rect *rect) {
+void GUI::RenderText(int x, int y, const char *text, float scaleFactor) {
     int text_width;
     int text_height;
     SDL_Surface *surface;
     SDL_Color textColor = {255, 255, 0, 0};
 
     surface = TTF_RenderText_Solid(font, text, textColor);
-    *texture = SDL_CreateTextureFromSurface(renderer, surface);
-    text_width = surface->w;
-    text_height = surface->h;
-    SDL_FreeSurface(surface);
+    *(&texture) = SDL_CreateTextureFromSurface(gRenderer, surface);
+    text_width = surface->w*scaleFactor;
+    text_height = surface->h*scaleFactor;
     rect->x = x;
     rect->y = y;
     rect->w = text_width;
     rect->h = text_height;
+    SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
+    // free resources
+    SDL_FreeSurface(surface);
 
+    /* Use TTF textures. */
+    SDL_RenderCopy(gRenderer, texture, nullptr, rect);
+    SDL_RenderPresent(gRenderer);
 }
 
-void DeInitialize_SDL(){
-    TTF_Quit();
-    SDL_DestroyRenderer(gRenderer);
-    SDL_DestroyWindow(gWindow);
-    SDL_Quit();
-}
 
-void RunKeyboardController(std::shared_ptr<Game> game)
+void GUI::RunKeyboardController(std::shared_ptr<Game> game)
 {
 	while (!game->IsFinished()) {
 		SDL_Event event;
@@ -95,26 +63,7 @@ void RunKeyboardController(std::shared_ptr<Game> game)
 
 void GUI::Run()
 {
-    Initialize_SDL();
-    TTF_Font *font = TTF_OpenFont("../fonts/FreeSans.ttf", 120);
-    if(!font) {
-        printf("TTF_OpenFont: %s\n", TTF_GetError());
-        // handle error
-    }
-    SDL_Texture *texture1, *texture2;
-    SDL_Rect rect1, rect2;
-    std::string text = "hello world";
-    get_text_and_rect(gRenderer, 0, 0,text.c_str(),font,&texture1, &rect1);
-
-    SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0);
-    SDL_RenderClear(gRenderer);
-
-    /* Use TTF textures. */
-    SDL_RenderCopy(gRenderer, texture1, NULL, &rect1);
-    SDL_RenderCopy(gRenderer, texture2, NULL, &rect2);
-
-    SDL_RenderPresent(gRenderer);
-
+    InitializeSDL2();
     auto g = std::make_shared<Game>();
 	g->Attach(this);
 	std::thread gameThread (StartGame, g);
@@ -122,12 +71,13 @@ void GUI::Run()
 	gameThread.join();
 	controllerThread.join();
 
-	DeInitialize_SDL();
+	DeInitializeSDL2();
 }
 
 void GUI::Update(const GameState& state)
 {
 	std::cout << StateToString(state);
+	RenderState(state);
 }
 
 std::string GUI::StateToString(const GameState &state)
@@ -165,14 +115,81 @@ std::string GUI::StateToString(const GameState &state)
 }
 
 void GUI::RenderState(const GameState &state) {
+    auto gamePiece = state.currentPiece;
+    auto score = state.score;
+    auto level = state.level;
+    auto board = state.board;
+    std::string title ="CPP TETRIS";
+    std::string scoreString = "SCORE " + std::to_string(score);
+    std::string levelString = "LEVEL " + std::to_string(level);
+    auto representation = gamePiece.GetRepresentation();
+    auto boardRepresentation = board.GetRepresentation();
+    for(int j=0; j<representation.size(); j++){
+        for(int i=0; i<representation[j].size(); i++){
+            if(representation[j][i]){
+                int yCoordinate = state.currentPieceOffsetY+j-(int)representation.size();
+                int xCoordinate = state.currentPieceOffsetX+i;
+                if(yCoordinate>=0){
+                    boardRepresentation[yCoordinate][xCoordinate] = Shape::iBlock;
+                }
+            }
+        }
+    }
+
+    RenderText(0,0,title.c_str(), 1);
+    RenderText(0, 100, scoreString.c_str(), 0.5);
+    RenderText(0,125,levelString.c_str(), 0.5);
+    SDL_RenderClear(gRenderer);
 
 }
 
 void GUI::InitializeSDL2() {
+    // init sdl2
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        fprintf(stderr, "Could not initialise SDL: %s\n", SDL_GetError());
+        exit(1);
+    }
+    // init ttf
+    if(TTF_Init() < 0){
+        fprintf(stderr, "Could not initialize TTF: %s\n", TTF_GetError());
+        exit(1);
+    }
+    int SCREEN_WIDTH = 1024;
+    int SCREEN_HEIGHT = 786;
 
+    // init window
+    gWindow = SDL_CreateWindow("CPP Tetris",
+                               SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+                               SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
+    if (gWindow == nullptr) {
+        fprintf(stderr, "Window could not be created: %s\n", SDL_GetError());
+        exit(1);
+    }
+
+    // init renderer
+    gRenderer = SDL_CreateRenderer(gWindow, -1, SDL_RENDERER_ACCELERATED);
+    if (gRenderer == nullptr)
+    {
+        fprintf(stderr, "Renderer could not be created! SDL Error: %s\n", SDL_GetError());
+    }
+
+    // init font
+    font = TTF_OpenFont("../fonts/FreeSans.ttf", 48);
+    if(!font) {
+        fprintf(stderr,"TTF_OpenFont: %s\n", TTF_GetError());
+    }
+
+    // init rect
+    rect = new SDL_Rect();
 }
 
 void GUI::DeInitializeSDL2() {
-
+    SDL_DestroyTexture(texture);
+    delete rect;
+    SDL_DestroyRenderer(gRenderer);
+    SDL_DestroyWindow(gWindow);
+    TTF_CloseFont(font);
+    TTF_Quit();
+    SDL_Quit();
 }
 
