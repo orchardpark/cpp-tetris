@@ -12,6 +12,7 @@ Requirements:
 - [SDL2](https://www.libsdl.org/download-2.0.php)
   * Install `libsdl2-dev`
   * Install `libsdl2-ttf-dev`
+  * Install `libsdl2-image-dev`
 - [GTest](https://github.com/google/googletest) 
   * Install it by cloning the repo and copying its contents to `/lib/googletest`
 

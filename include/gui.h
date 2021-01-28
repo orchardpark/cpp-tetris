@@ -7,6 +7,7 @@
 #include <memory>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 
 class GUI : IObserver {
 public:
@@ -29,6 +30,10 @@ private:
     /// \param text The text to be rendered
     /// \param scaleFactor The size of the render
     void RenderText(int x, int y, const char* text, float scaleFactor);
+    void RenderSquare(int row, int column, Shape s);
+    /// Renders the board on the screen
+    /// \param board The game board
+    void RenderBoard(std::vector<std::vector<Shape>>& board);
     /// Initialized SDL2 resources
     void InitializeSDL2();
     /// Frees all SDL2 resources

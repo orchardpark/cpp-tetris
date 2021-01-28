@@ -139,8 +139,27 @@ void GUI::RenderState(const GameState &state) {
     RenderText(0,0,title.c_str(), 1);
     RenderText(0, 100, scoreString.c_str(), 0.5);
     RenderText(0,125,levelString.c_str(), 0.5);
+    RenderBoard(boardRepresentation);
     SDL_RenderClear(gRenderer);
 
+}
+
+void GUI::RenderSquare(int row, int column, Shape s){
+    SDL_Texture *img = nullptr;
+    img = IMG_LoadTexture(gRenderer, "../textures/green.png");
+    int w,h;
+    SDL_QueryTexture(img, nullptr, nullptr, &w, &h);
+    SDL_Rect texr;
+    texr.x = 200;
+    texr.y = 200;
+    texr.h = h;
+    texr.w = w;
+    SDL_RenderCopy(gRenderer, img, nullptr, &texr);
+    SDL_RenderPresent(gRenderer);
+}
+
+void GUI::RenderBoard(std::vector<std::vector<Shape>>& board) {
+    RenderSquare(0,0,Shape::iBlock);
 }
 
 void GUI::InitializeSDL2() {
