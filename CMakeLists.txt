@@ -10,3 +10,6 @@ add_subdirectory(lib/googletest)
 
 # copy fonts
 file(COPY fonts DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+# copy textures
+file(COPY textures DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
