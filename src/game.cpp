@@ -25,11 +25,10 @@ void Game::Run() {
     // Initialize first piece
     gameState_.currentPiece = NextPiece();
 	// Run Game Loop
-	while (!IsGameFinished()) {
+	while (!gameState_.isFinished) {
         std::this_thread::sleep_for(std::chrono::milliseconds(1000/gameState_.level));
         ExecuteTimeStep();
 	}
-    gameState_.isFinished = true;
 }
 
 void Game::Attach(IObserver* observer) {
@@ -167,14 +166,13 @@ int Game::PieceToBoardXCoordinate(int pieceXCoordinate) {
     return gameState_.currentPieceOffsetX + pieceXCoordinate;
 }
 
-bool Game::ExecuteTimeStep() {
-    bool gameFinished = false;
+void Game::ExecuteTimeStep() {
     mutex_.lock();
+    // Move piece down
     MoveCurrentPieceDown();
-    bool blocked = IsPieceBlocked();
-    if(blocked){
+    if(IsPieceBlocked()){
         if (IsGameFinished()) {
-            gameFinished = true;
+            return;
         }
         else {
             AddPieceToBoard();
@@ -188,8 +186,8 @@ bool Game::ExecuteTimeStep() {
     for (auto observer : observers) {
         observer->Update(gameState_);
     }
+    if(!gameState_.isFinished) gameState_.isFinished = IsGameFinished();
     mutex_.unlock();
-    return !gameFinished;
 }
 
 void Game::SendGameInput(GameInput input) {
@@ -253,7 +251,7 @@ void Game::MoveCurrentPieceRight() {
     for (int j = 0; j < representation.size(); j++) {
         int rightYCoordinate = PieceToBoardYCoordinate(j);
         if (rightYCoordinate >= 0) {
-            for (int i = representation.size() - 1; i >= 0; i--) {
+            for (int i = (int)representation.size() - 1; i >= 0; i--) {
                 if (representation[j][i]) {
                     int rightXCoordinate = PieceToBoardXCoordinate(i) + 1;
                     if (rightXCoordinate < representation.size()) {
@@ -320,3 +318,8 @@ void Game::RotateCurrentPiece() {
     
 }
 
+void Game::QuitGame() {
+    mutex_.lock();
+    gameState_.isFinished = true;
+    mutex_.unlock();
+}

@@ -56,25 +56,23 @@ public:
     /// <param name="input">input (move down, left, right, rotate)</param>
     void SendGameInput(GameInput input);
 
-	/// <summary>
-	/// 
-	/// </summary>
 	/// <returns>True if game is finished</returns>
 	bool IsFinished();
+
+	/// Quits the game
+	void QuitGame();
 
 private:
     /// <summary>
     /// Executes one time step (moving current piece down 1)
     /// </summary>
-    /// <returns>true if succeeded and false if game is finished</returns>
-    bool ExecuteTimeStep();
+    void ExecuteTimeStep();
 	bool IsGameFinished();
     GamePiece NextPiece();
     bool IsPieceBlocked();
     void AddPieceToBoard();
     void ClearAndScore();
-    void CreateRandomGenerator();
-    
+
     /// <summary>
     /// Converts a y coordinate from the frame of the piece to a y coordinate on the board
     /// </summary>

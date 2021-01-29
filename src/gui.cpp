@@ -34,31 +34,36 @@ void GUI::RunKeyboardController(std::shared_ptr<Game> game)
 	while (!game->IsFinished()) {
 		SDL_Event event;
 		/* Poll for events. SDL_PollEvent() returns 0 when there are no  */
-		/* more events on the event queue, our while loop will exit when */
-		/* that occurs.                                                  */
-		while (SDL_PollEvent(&event)) {
-			/* We are only worried about SDL_KEYDOWN and SDL_KEYUP events */
-			switch (event.type) {
-			case SDL_KEYDOWN:
-				switch (event.key.keysym.scancode) {
-				case SDL_SCANCODE_DOWN:
-					game->SendGameInput(GameInput::MOVE_DOWN);
-					break;
-				case SDL_SCANCODE_UP:
-					game->SendGameInput(GameInput::ROTATE);
-					break;
-				case SDL_SCANCODE_LEFT:
-					game->SendGameInput(GameInput::MOVE_LEFT);
-					break;
-				case SDL_SCANCODE_RIGHT:
-					game->SendGameInput(GameInput::MOVE_RIGHT);
-					break;
-				default:
-					break;
-				}
-			}
-		}
-	}
+        /* more events on the event queue, our while loop will exit when */
+        /* that occurs.                                                  */
+        while (SDL_PollEvent(&event) && !game->IsFinished()) {
+            switch (event.type) {
+                case SDL_KEYDOWN:
+                    switch (event.key.keysym.scancode) {
+                        case SDL_SCANCODE_DOWN:
+                            game->SendGameInput(GameInput::MOVE_DOWN);
+                            break;
+                        case SDL_SCANCODE_UP:
+                            game->SendGameInput(GameInput::ROTATE);
+                            break;
+                        case SDL_SCANCODE_LEFT:
+                            game->SendGameInput(GameInput::MOVE_LEFT);
+                            break;
+                        case SDL_SCANCODE_RIGHT:
+                            game->SendGameInput(GameInput::MOVE_RIGHT);
+                            break;
+                        default:
+                            break;
+                    }
+                    break;
+                case SDL_QUIT:
+                    game->QuitGame();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
 };
 
 void GUI::Run()
@@ -68,15 +73,13 @@ void GUI::Run()
 	g->Attach(this);
 	std::thread gameThread (StartGame, g);
 	std::thread controllerThread(RunKeyboardController, g);
+    controllerThread.join();
 	gameThread.join();
-	controllerThread.join();
-
 	DeInitializeSDL2();
 }
 
 void GUI::Update(const GameState& state)
 {
-	std::cout << StateToString(state);
 	RenderState(state);
 }
 
@@ -146,7 +149,7 @@ void GUI::RenderState(const GameState &state) {
 
 void GUI::RenderSquare(int row, int column, Shape s){
     SDL_Texture *img = nullptr;
-    img = IMG_LoadTexture(gRenderer, "../textures/green.png");
+    img = IMG_LoadTexture(gRenderer, "../textures/yellow.png");
     int w,h;
     SDL_QueryTexture(img, nullptr, nullptr, &w, &h);
     SDL_Rect texr;
