@@ -22,7 +22,6 @@ private:
     /// Starts the keyboard event queue and handler in a new thread
     /// \param game The game to apply the key events to
     static void RunKeyboardController(std::shared_ptr<Game> game);
-    std::string StateToString(const GameState& state);
     /// Renders the current state of the game to screen
     /// \param state The current game state
     void RenderState(const GameState& state);
