@@ -64,7 +64,7 @@ void GUI::RunKeyboardController(std::shared_ptr<Game> game)
             }
         }
     }
-};
+}
 
 void GUI::Run()
 {
@@ -112,8 +112,6 @@ std::string GUI::StateToString(const GameState &state)
 	        boardString += ShapeToString(boardRepresentation[j][i]);
 	    } boardString += "\n";
 	}
-
-
 	return title + scoreString + levelString + boardString;
 }
 
@@ -148,21 +146,34 @@ void GUI::RenderState(const GameState &state) {
 }
 
 void GUI::RenderSquare(int row, int column, Shape s){
-    SDL_Texture *img = nullptr;
-    img = IMG_LoadTexture(gRenderer, "../textures/yellow.png");
-    int w,h;
-    SDL_QueryTexture(img, nullptr, nullptr, &w, &h);
     SDL_Rect texr;
     texr.x = 200;
     texr.y = 200;
-    texr.h = h;
-    texr.w = w;
-    SDL_RenderCopy(gRenderer, img, nullptr, &texr);
+    texr.h = IMAGE_BLOCK_HEIGHT;
+    texr.w = IMAGE_BLOCK_WIDTH;
+    SDL_RenderCopy(gRenderer, imageTextures["blue"], nullptr, &texr);
     SDL_RenderPresent(gRenderer);
 }
 
 void GUI::RenderBoard(std::vector<std::vector<Shape>>& board) {
     RenderSquare(0,0,Shape::iBlock);
+}
+
+void GUI::LoadImageTextures() {
+    for(const auto& entry : std::filesystem::directory_iterator(TEXTURES_PATH)){
+        std::string fileName = entry.path().filename();
+        std::string delimiter = ".png";
+        std::string color = fileName.substr(0, fileName.find(delimiter));
+        SDL_Texture *img = nullptr;
+        img = IMG_LoadTexture(gRenderer, entry.path().c_str());
+        imageTextures[color]=img;
+    }
+}
+
+void GUI::ClearImageTextures() {
+    for(auto const&it : imageTextures){
+        SDL_DestroyTexture(it.second);
+    }
 }
 
 void GUI::InitializeSDL2() {
@@ -203,11 +214,14 @@ void GUI::InitializeSDL2() {
 
     // init rect
     rect = new SDL_Rect();
+
+    LoadImageTextures();
 }
 
 void GUI::DeInitializeSDL2() {
     SDL_DestroyTexture(texture);
     delete rect;
+    ClearImageTextures();
     SDL_DestroyRenderer(gRenderer);
     SDL_DestroyWindow(gWindow);
     TTF_CloseFont(font);

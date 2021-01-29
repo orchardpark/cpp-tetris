@@ -3,8 +3,10 @@
 #include "observer.h"
 #include <thread>
 #include "game.h"
+#include <map>
 #include <iostream>
 #include <memory>
+#include <filesystem>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
@@ -34,6 +36,10 @@ private:
     /// Renders the board on the screen
     /// \param board The game board
     void RenderBoard(std::vector<std::vector<Shape>>& board);
+    /// Loads image textures from file
+    void LoadImageTextures();
+    /// Clear image textures
+    void ClearImageTextures();
     /// Initialized SDL2 resources
     void InitializeSDL2();
     /// Frees all SDL2 resources
@@ -41,9 +47,19 @@ private:
 
     SDL_Window* gWindow = nullptr;
     SDL_Renderer* gRenderer = nullptr;
+
+    // text
     TTF_Font* font = nullptr;
     SDL_Rect* rect = nullptr;
     SDL_Texture *texture;
+
+    // images
+    std::map<std::string, SDL_Texture*> imageTextures;
+
+    const int IMAGE_BLOCK_WIDTH = 16;
+    const int IMAGE_BLOCK_HEIGHT = 16;
+    const std::string TEXTURES_PATH = "../textures";
+
 };
 
 #endif // !CPP_TETRIS_GUI_H
