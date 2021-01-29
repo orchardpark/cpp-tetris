@@ -147,16 +147,48 @@ void GUI::RenderState(const GameState &state) {
 
 void GUI::RenderSquare(int row, int column, Shape s){
     SDL_Rect texr;
-    texr.x = 200;
-    texr.y = 200;
+    texr.x = 200+column*IMAGE_BLOCK_WIDTH;
+    texr.y = 200+row*IMAGE_BLOCK_HEIGHT;
     texr.h = IMAGE_BLOCK_HEIGHT;
     texr.w = IMAGE_BLOCK_WIDTH;
-    SDL_RenderCopy(gRenderer, imageTextures["blue"], nullptr, &texr);
+    SDL_Texture *img;
+    switch(s){
+        case Shape::iBlock:
+            img = imageTextures["cyan"];
+            break;
+        case Shape::lBlock:
+            img = imageTextures["orange"];
+            break;
+        case Shape::jBlock:
+            img = imageTextures["blue"];
+            break;
+        case Shape::oBlock:
+            img = imageTextures["yellow"];
+            break;
+        case Shape::sBlock:
+            img = imageTextures["green"];
+            break;
+        case Shape::tBlock:
+            img = imageTextures["magenta"];
+            break;
+        case Shape::zBlock:
+            img = imageTextures["red"];
+            break;
+        default:
+            img = imageTextures["white"];
+            break;
+
+    }
+    SDL_RenderCopy(gRenderer, img, nullptr, &texr);
     SDL_RenderPresent(gRenderer);
 }
 
 void GUI::RenderBoard(std::vector<std::vector<Shape>>& board) {
-    RenderSquare(0,0,Shape::iBlock);
+    for(int j=0;j<NumRowsBoard;j++){
+        for(int i=0;i<NumColumnsBoard;i++){
+            RenderSquare(j, i, board[j][i]);
+        }
+    }
 }
 
 void GUI::LoadImageTextures() {
