@@ -25,7 +25,7 @@ void GUI::RenderText(int x, int y, const char *text, float scaleFactor) {
 
     /* Use TTF textures. */
     SDL_RenderCopy(gRenderer, texture, nullptr, rect);
-    SDL_RenderPresent(gRenderer);
+    //SDL_RenderPresent(gRenderer);
 }
 
 
@@ -105,11 +105,12 @@ void GUI::RenderState(const GameState &state) {
         }
     }
 
+    SDL_RenderClear(gRenderer);
     RenderText(0,0,title.c_str(), 1);
     RenderText(0, 100, scoreString.c_str(), 0.5);
     RenderText(0,125,levelString.c_str(), 0.5);
     RenderBoard(boardRepresentation);
-    SDL_RenderClear(gRenderer);
+    SDL_RenderPresent(gRenderer);
 
 }
 
@@ -148,7 +149,7 @@ void GUI::RenderSquare(int row, int column, Shape s){
 
     }
     SDL_RenderCopy(gRenderer, img, nullptr, &texr);
-    SDL_RenderPresent(gRenderer);
+    //SDL_RenderPresent(gRenderer);
 }
 
 void GUI::RenderBoard(std::vector<std::vector<Shape>>& board) {
