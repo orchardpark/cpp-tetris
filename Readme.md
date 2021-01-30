@@ -23,4 +23,8 @@ executing `./cpp-tetris`.
 
 ## Architecture
 
+The ModelViewController (MVC) pattern is used to structure the program. 
+The game is modeled in the `model` and `game` classes and observed by the
+`gui` class.
+
 
