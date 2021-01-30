@@ -25,7 +25,6 @@ void GUI::RenderText(int x, int y, const char *text, float scaleFactor) {
 
     /* Use TTF textures. */
     SDL_RenderCopy(gRenderer, texture, nullptr, rect);
-    //SDL_RenderPresent(gRenderer);
 }
 
 
@@ -93,13 +92,14 @@ void GUI::RenderState(const GameState &state) {
     std::string levelString = "LEVEL " + std::to_string(level);
     auto representation = gamePiece.GetRepresentation();
     auto boardRepresentation = board.GetRepresentation();
+    auto currentShape = gamePiece.GetShape();
     for(int j=0; j<representation.size(); j++){
         for(int i=0; i<representation[j].size(); i++){
             if(representation[j][i]){
                 int yCoordinate = state.currentPieceOffsetY+j-(int)representation.size();
                 int xCoordinate = state.currentPieceOffsetX+i;
                 if(yCoordinate>=0){
-                    boardRepresentation[yCoordinate][xCoordinate] = Shape::iBlock;
+                    boardRepresentation[yCoordinate][xCoordinate] = currentShape;
                 }
             }
         }
@@ -149,7 +149,6 @@ void GUI::RenderSquare(int row, int column, Shape s){
 
     }
     SDL_RenderCopy(gRenderer, img, nullptr, &texr);
-    //SDL_RenderPresent(gRenderer);
 }
 
 void GUI::RenderBoard(std::vector<std::vector<Shape>>& board) {
@@ -165,7 +164,7 @@ void GUI::LoadImageTextures() {
         std::string fileName = entry.path().filename();
         std::string delimiter = ".png";
         std::string color = fileName.substr(0, fileName.find(delimiter));
-        SDL_Texture *img = nullptr;
+        SDL_Texture *img;
         img = IMG_LoadTexture(gRenderer, entry.path().c_str());
         imageTextures[color]=img;
     }
