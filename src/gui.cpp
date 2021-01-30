@@ -117,7 +117,7 @@ void GUI::RenderState(const GameState &state) {
 void GUI::RenderSquare(int row, int column, Shape s){
     SDL_Rect texr;
     texr.x = 200+column*IMAGE_BLOCK_WIDTH;
-    texr.y = 200+row*IMAGE_BLOCK_HEIGHT;
+    texr.y = 100+row*IMAGE_BLOCK_HEIGHT;
     texr.h = IMAGE_BLOCK_HEIGHT;
     texr.w = IMAGE_BLOCK_WIDTH;
     SDL_Texture *img;
@@ -188,7 +188,7 @@ void GUI::InitializeSDL2() {
         fprintf(stderr, "Could not initialize TTF: %s\n", TTF_GetError());
         exit(1);
     }
-    int SCREEN_WIDTH = 1024;
+    int SCREEN_WIDTH = 768;
     int SCREEN_HEIGHT = 786;
 
     // init window

@@ -55,8 +55,8 @@ private:
     // images
     std::map<std::string, SDL_Texture*> imageTextures;
 
-    const int IMAGE_BLOCK_WIDTH = 16;
-    const int IMAGE_BLOCK_HEIGHT = 16;
+    const int IMAGE_BLOCK_WIDTH = 16*2;
+    const int IMAGE_BLOCK_HEIGHT = 16*2;
     const std::string TEXTURES_PATH = "../textures";
 
 };
