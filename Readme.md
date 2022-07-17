@@ -2,6 +2,8 @@
 
 C++ implementation of the Tetris game.
 
+![Tetris](tetris.png)
+
 ## Compilation & Installation
 
 Only tested on Ubuntu Linux. Windows is *not* supported.
